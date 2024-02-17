@@ -7,16 +7,12 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z
-      .string()
-      .url()
-      .refine(
-        (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
-        "You forgot to change the default URL"
-      ),
-    NODE_ENV: z
-      .enum(["development", "test", "production"])
-      .default("development"),
+    DATABASE_URL: z.string().url(),
+    NODE_ENV: z.enum(["development", "test", "production"]),
+    // CLERK_SECRET_KEY: z.string(),
+    // AXIOM_TOKEN: z.string(),
+    // AXIOM_ORG_ID: z.string(),
+    // AXIOM_DATASET: z.string(),
   },
 
   /**
@@ -25,7 +21,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
   },
 
   /**
@@ -35,7 +31,12 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    // CLERK_SECRET_KEY: process.env.NODE_ENV,
+    // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+    //   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    // AXIOM_TOKEN: process.env.AXIOM_TOKEN,
+    // AXIOM_ORG_ID: process.env.AXIOM_ORG_ID,
+    // AXIOM_DATASET: process.env.AXIOM_DATASET,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
