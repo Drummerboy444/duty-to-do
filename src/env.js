@@ -9,7 +9,7 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
-    // CLERK_SECRET_KEY: z.string(),
+    CLERK_SECRET_KEY: z.string(),
     // AXIOM_TOKEN: z.string(),
     // AXIOM_ORG_ID: z.string(),
     // AXIOM_DATASET: z.string(),
@@ -21,7 +21,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
   },
 
   /**
@@ -31,9 +31,9 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    // CLERK_SECRET_KEY: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-    //   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    CLERK_SECRET_KEY: process.env.NODE_ENV,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     // AXIOM_TOKEN: process.env.AXIOM_TOKEN,
     // AXIOM_ORG_ID: process.env.AXIOM_ORG_ID,
     // AXIOM_DATASET: process.env.AXIOM_DATASET,

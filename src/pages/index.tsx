@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import Head from "next/head";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <h1>This is a Header</h1>
+        <UserButton afterSignOutUrl="/" />
       </main>
     </>
   );
