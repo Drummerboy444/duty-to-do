@@ -1,7 +1,10 @@
 import { UserButton } from "@clerk/nextjs";
 import Head from "next/head";
+import { api } from "~/utils/api";
 
 export default function Home() {
+  const x = api.post.hello.useQuery({ text: "Something" });
+
   return (
     <>
       <Head>
