@@ -10,7 +10,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Head>
         <title>Duty to do</title>
         <meta name="description" content="App to help you choose what to do" />
-        <link rel="icon" href="/test.svg" />
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <Component {...pageProps} />;
     </ClerkProvider>
