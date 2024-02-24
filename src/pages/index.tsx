@@ -16,7 +16,13 @@ export default function Home() {
 
   return (
     <main>
+      <div>Start</div>
       <UserButton afterSignOutUrl="/" />
+      <div className="h-48">box1</div>
+      <div className="h-48">box</div>
+      <div className="h-48">box</div>
+      <div className="h-48">box</div>
+      <div className="h-48">box</div>
       {activityCollections.map((activityCollection) => (
         <div key={activityCollection.id}>Name: {activityCollection.name}</div>
       ))}
