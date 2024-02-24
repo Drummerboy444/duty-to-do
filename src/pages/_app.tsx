@@ -10,7 +10,7 @@ const Header = () => {
   const { theme, resolvedTheme, setTheme } = useTheme();
 
   return (
-    <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-slate-800">
+    <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-zinc-900">
       <UserButton
         afterSignOutUrl="/"
         {...(resolvedTheme === "dark"
