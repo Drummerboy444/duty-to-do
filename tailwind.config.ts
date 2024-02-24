@@ -24,4 +24,5 @@ export default {
       addUtilities(flex3);
     }),
   ],
+  darkMode: "selector",
 } satisfies Config;
