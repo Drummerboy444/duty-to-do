@@ -9,7 +9,7 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="sticky top-0 flex gap-8 bg-red-500 p-4 dark:bg-purple-500">
+    <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-slate-800">
       <div className="flex gap-2">
         <input
           type="checkbox"
