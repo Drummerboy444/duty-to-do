@@ -1,14 +1,27 @@
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
+import plugin from "tailwindcss/plugin";
+
+const flex2 = {
+  ".flex-2": {
+    flex: "2",
+  },
+};
+
+const flex3 = {
+  ".flex-3": {
+    flex: "3",
+  },
+};
 
 export default {
   content: ["./src/**/*.tsx"],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
-    },
+    extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities(flex2);
+      addUtilities(flex3);
+    }),
+  ],
 } satisfies Config;
