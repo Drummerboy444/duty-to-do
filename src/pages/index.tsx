@@ -1,4 +1,3 @@
-import { UserButton } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 
 export default function Home() {
@@ -17,7 +16,6 @@ export default function Home() {
   return (
     <main>
       <div>Start</div>
-      <UserButton afterSignOutUrl="/" />
       <div className="h-48">box1</div>
       <div className="h-48">box</div>
       <div className="h-48">box</div>

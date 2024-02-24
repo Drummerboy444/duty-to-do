@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
@@ -10,6 +10,8 @@ const Header = () => {
 
   return (
     <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-slate-800">
+      <UserButton afterSignOutUrl="/" />
+
       <div className="flex gap-2">
         <input
           type="checkbox"
@@ -20,6 +22,7 @@ const Header = () => {
         />
         <span>Light</span>
       </div>
+
       <div className="flex gap-2">
         <input
           type="checkbox"
@@ -30,6 +33,7 @@ const Header = () => {
         />
         <span>Dark</span>
       </div>
+
       <div className="flex gap-2">
         <input
           type="checkbox"
