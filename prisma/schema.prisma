@@ -15,6 +15,7 @@ model ActivityCollection {
   ownerId String
 
   name String
+  description String
 
   @@unique([name, ownerId])
 }
