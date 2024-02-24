@@ -15,8 +15,7 @@ export default function Home() {
   const { activityCollections } = activityCollectionsData;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[rgb(172,143,212)] to-[#464dcb]">
-      <h1>This is a Header</h1>
+    <main>
       <UserButton afterSignOutUrl="/" />
       {activityCollections.map((activityCollection) => (
         <div key={activityCollection.id}>Name: {activityCollection.name}</div>
