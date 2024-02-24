@@ -3,8 +3,10 @@ import { dark } from "@clerk/themes";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
+import { isSignInRoute, isSignUpRoute } from "~/utils/routing";
 
 const Header = () => {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -55,6 +57,8 @@ const Header = () => {
 };
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const { route } = useRouter();
+
   return (
     <ClerkProvider>
       <ThemeProvider attribute="class">
@@ -75,8 +79,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             media="(prefers-color-scheme: dark)"
           />
         </Head>
-
-        <Header />
+        {!isSignInRoute(route) && !isSignUpRoute(route) && <Header />}
         <Component {...pageProps} />
       </ThemeProvider>
     </ClerkProvider>
