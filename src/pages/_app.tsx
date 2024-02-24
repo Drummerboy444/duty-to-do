@@ -13,10 +13,8 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-zinc-900">
-      <UserButton afterSignOutUrl="/" />
-
-      <div className="flex gap-2">
+    <div className="sticky top-0 flex min-h-16 gap-8 bg-white p-4 dark:bg-zinc-900">
+      <div className="flex items-center gap-2 ">
         <input
           type="checkbox"
           checked={theme === "light"}
@@ -27,7 +25,7 @@ const Header = () => {
         <span>Light</span>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={theme === "dark"}
@@ -38,7 +36,7 @@ const Header = () => {
         <span>Dark</span>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <input
           type="checkbox"
           checked={theme === "system"}
@@ -48,6 +46,10 @@ const Header = () => {
         />
         <span>System</span>
       </div>
+
+      <div className="grow" />
+
+      <UserButton afterSignOutUrl="/" />
     </div>
   );
 };
