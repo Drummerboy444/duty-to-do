@@ -1,6 +1,6 @@
 import { api } from "~/utils/api";
 
-export default function Home() {
+export default function HomePage() {
   const {
     data: activityCollectionsData,
     isLoading: isLoadingActivityCollections,
