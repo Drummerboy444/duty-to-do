@@ -1,4 +1,5 @@
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
@@ -6,11 +7,16 @@ import "~/styles/globals.css";
 import { api } from "~/utils/api";
 
 const Header = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
 
   return (
     <div className="sticky top-0 flex gap-8 bg-white p-4 dark:bg-slate-800">
-      <UserButton afterSignOutUrl="/" />
+      <UserButton
+        afterSignOutUrl="/"
+        {...(resolvedTheme === "dark"
+          ? { appearance: { baseTheme: dark } }
+          : {})}
+      />
 
       <div className="flex gap-2">
         <input
