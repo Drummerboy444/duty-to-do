@@ -19,7 +19,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <Head>
         <title>Duty to do</title>
         <meta name="description" content="App to help you choose what to do" />
-        <link rel="icon" href="/favicon.svg" />
+        <link
+          href="light-mode-favicon.svg"
+          rel="icon"
+          media="(prefers-color-scheme: light)"
+        />
+        <link
+          href="dark-mode-favicon.svg"
+          rel="icon"
+          media="(prefers-color-scheme: dark)"
+        />
       </Head>
       <Header />
       <Component {...pageProps} />
