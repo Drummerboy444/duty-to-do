@@ -7,15 +7,39 @@ import { api } from "~/utils/api";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
+
   return (
     <div className="sticky top-0 flex gap-8 bg-red-500 p-4 dark:bg-purple-500">
-      <span>HeaderItem1</span>
-      <span>HeaderItem2</span>
-      <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-        <option value="system">System</option>
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
+      <div className="flex gap-2">
+        <input
+          type="checkbox"
+          checked={theme === "light"}
+          onChange={() => {
+            setTheme("light");
+          }}
+        />
+        <span>Light</span>
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="checkbox"
+          checked={theme === "dark"}
+          onChange={() => {
+            setTheme("dark");
+          }}
+        />
+        <span>Dark</span>
+      </div>
+      <div className="flex gap-2">
+        <input
+          type="checkbox"
+          checked={theme === "system"}
+          onChange={() => {
+            setTheme("system");
+          }}
+        />
+        <span>System</span>
+      </div>
     </div>
   );
 };
