@@ -17,7 +17,7 @@ const ActivityCollectionCard = ({
   };
 }) => {
   return (
-    <div className="flex flex-col rounded-xl border border-gray-300 p-4 dark:border-gray-500">
+    <div className="flex flex-col rounded-xl border border-gray-300 p-4 hover:cursor-pointer hover:border-black dark:border-gray-500 dark:hover:border-white">
       <h2 className="pb-4 text-xl">{name}</h2>
       <p className="pb-2">{description}</p>
       <div className="grow" />
