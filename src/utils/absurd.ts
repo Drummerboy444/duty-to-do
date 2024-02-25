@@ -1,1 +1,3 @@
-export const absurd = (_: never) => undefined as never;
+export const absurd = (_: never) => {
+  throw new Error("Absurd function was called");
+};
