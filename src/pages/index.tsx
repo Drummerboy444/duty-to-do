@@ -1,4 +1,5 @@
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
+import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
 
 export default function HomePage() {
@@ -8,7 +9,7 @@ export default function HomePage() {
     refetch: refetchActivityCollections,
   } = api.activityCollection.getAll.useQuery();
 
-  if (isLoadingActivityCollections) return <div>Loading...</div>;
+  if (isLoadingActivityCollections) return <LoadingPage />;
 
   if (activityCollectionsData === undefined)
     return <div>Something went wrong...</div>;
