@@ -1,10 +1,10 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
+import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 
 dayjs.extend(relativeTime);
 
@@ -22,19 +22,26 @@ const ActivityCollectionCard = ({
 }) => {
   return (
     <div className="flex flex-col rounded-xl border border-gray-300 p-4 hover:cursor-pointer hover:border-black dark:border-gray-500 dark:hover:border-white">
-      <h2 className="pb-4 text-xl">{name}</h2>
+      <div className="flex justify-between gap-2 pb-4">
+        <h2 className="text-xl">{name}</h2>
+        <div>
+          <EditActivityCollectionButton
+            activityCollectionId={id}
+            defaultValues={{ name, description }}
+            refetch={refetch}
+          />
+        </div>
+      </div>
+
       <p className="pb-2">{description}</p>
+
       <div className="grow" />
-      <div className="flex justify-end pb-2">
+
+      <div className="flex justify-end">
         <div className="text-sm text-gray-500">
           Created {dayjs(createdAt).fromNow()}
         </div>
       </div>
-      <EditActivityCollectionButton
-        activityCollectionId={id}
-        defaultValues={{ name, description }}
-        refetch={refetch}
-      />
     </div>
   );
 };

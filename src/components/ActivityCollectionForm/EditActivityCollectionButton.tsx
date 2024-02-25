@@ -10,6 +10,8 @@ import {
   ActivityCollectionForm,
   type ActivityCollectionFormState,
 } from "./ActivityCollectionForm";
+import { IconButton } from "../IconButton";
+import { Pencil1Icon } from "@radix-ui/react-icons";
 
 export const EditActivityCollectionButton = ({
   activityCollectionId,
@@ -90,8 +92,8 @@ export const EditActivityCollectionButton = ({
 
   return (
     <>
-      <Button
-        label="Edit"
+      <IconButton
+        icon={<Pencil1Icon />}
         onClick={() => {
           setOpen(true);
         }}
