@@ -1,4 +1,5 @@
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
+import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
 
@@ -12,7 +13,9 @@ export default function HomePage() {
   if (isLoadingActivityCollections) return <LoadingPage />;
 
   if (activityCollectionsData === undefined)
-    return <div>Something went wrong...</div>;
+    return (
+      <ErrorPage message="We couldn't find your activity collections, please try again later" />
+    );
 
   const { activityCollections } = activityCollectionsData;
 
