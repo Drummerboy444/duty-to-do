@@ -32,6 +32,8 @@ const config = {
       },
     ],
     "@typescript-eslint/prefer-nullish-coalescing": "off",
+
+    "no-warning-comments": "error",
   },
 };
 
