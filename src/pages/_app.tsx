@@ -5,6 +5,7 @@ import { type AppType } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type PropsWithChildren } from "react";
+import { Toaster } from "react-hot-toast";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 import { isSignInRoute, isSignUpRoute } from "~/utils/routing";
@@ -61,6 +62,20 @@ const ClerkWrapper = ({ children }: PropsWithChildren) => {
     <ClerkProvider
       {...(resolvedTheme === "dark" ? { appearance: { baseTheme: dark } } : {})}
     >
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          duration: 5_000,
+          ...(resolvedTheme === "dark"
+            ? {
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                },
+              }
+            : {}),
+        }}
+      />
       {children}
     </ClerkProvider>
   );
