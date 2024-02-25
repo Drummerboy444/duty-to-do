@@ -2,6 +2,18 @@ import { CreateActivityCollectionButton } from "~/components/ActivityCollectionF
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
+// const ActivityCollectionCard = ({}: {
+//   name: string;
+//   description: string;
+//   createdAt: string;
+// }) => {
+
+// };
 
 export default function HomePage() {
   const {
@@ -32,10 +44,7 @@ export default function HomePage() {
         <div key={activityCollection.id}>
           <div>Name: {activityCollection.name}</div>
           <div>Description: {activityCollection.description}</div>
-          <div>
-            Created at: {activityCollection.createdAt.toLocaleTimeString()}{" "}
-            {activityCollection.createdAt.toLocaleDateString()}
-          </div>
+          <div>Created: {dayjs(activityCollection.createdAt).fromNow()}</div>
         </div>
       ))}
     </main>
