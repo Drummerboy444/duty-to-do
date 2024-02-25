@@ -1,15 +1,15 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Button } from "~/components/Button";
+import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
+import { Dialog } from "../Dialog";
+import { ErrorCallout } from "../ErrorCallout";
+import { LoadingSpinner } from "../LoadingSpinner";
 import {
   ActivityCollectionForm,
   type ActivityCollectionFormState,
 } from "./ActivityCollectionForm";
-import { absurd } from "~/utils/absurd";
-import toast from "react-hot-toast";
-import { ErrorCallout } from "../ErrorCallout";
-import { LoadingSpinner } from "../LoadingSpinner";
 
 export const CreateActivityCollectionButton = ({
   refetch,
@@ -25,6 +25,11 @@ export const CreateActivityCollectionButton = ({
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
+  const clearState = () => {
+    setFormState({ name: "", description: "" });
+    setErrorMessage(undefined);
+  };
+
   const {
     mutate: createActivityCollection,
     isLoading: isCreatingActivityCollection,
@@ -34,8 +39,7 @@ export const CreateActivityCollectionButton = ({
         case "SUCCESS": {
           await refetch();
           setOpen(false);
-          setFormState({ name: "", description: "" });
-          setErrorMessage(undefined);
+          clearState();
           toast.success("Successfully create activity collection");
           return;
         }
@@ -70,15 +74,7 @@ export const CreateActivityCollectionButton = ({
   });
 
   return (
-    <Dialog.Root
-      open={open}
-      onOpenChange={(open) => {
-        console.log("On open change...");
-        setOpen(open);
-        setFormState({ name: "", description: "" });
-        setErrorMessage(undefined);
-      }}
-    >
+    <>
       <Button
         label="Create Activity Collection"
         onClick={() => {
@@ -86,49 +82,50 @@ export const CreateActivityCollectionButton = ({
         }}
       />
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30 dark:opacity-50" />
+      <Dialog
+        title="Create Activity Collection"
+        open={open}
+        onOpenChange={(open) => {
+          setOpen(open);
+          clearState();
+        }}
+        content={
+          <div className="flex flex-col gap-4">
+            <ActivityCollectionForm
+              formState={formState}
+              onFormStateChange={(formStateChange) => {
+                setFormState({ ...formState, ...formStateChange });
+              }}
+            />
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 flex w-5/6 max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-lg bg-white px-12 py-8 shadow-2xl dark:bg-zinc-900">
-          <Dialog.Title className="text-2xl">
-            Create Activity Collection
-          </Dialog.Title>
-
-          <ActivityCollectionForm
-            formState={formState}
-            onFormStateChange={(formStateChange) => {
-              setFormState({ ...formState, ...formStateChange });
-            }}
-          />
-
-          {errorMessage !== undefined && (
-            <ErrorCallout message={errorMessage} />
-          )}
-
+            {errorMessage !== undefined && (
+              <ErrorCallout message={errorMessage} />
+            )}
+          </div>
+        }
+        footer={
           <div className="flex items-center justify-end gap-4">
             {isCreatingActivityCollection && <LoadingSpinner />}
 
-            <Dialog.Close asChild>
-              <Button
-                label="Cancel"
-                onClick={() => {
-                  setOpen(false);
-                }}
-                disabled={isCreatingActivityCollection}
-              />
-            </Dialog.Close>
+            <Button
+              label="Cancel"
+              onClick={() => {
+                setOpen(false);
+                clearState();
+              }}
+              disabled={isCreatingActivityCollection}
+            />
 
             <Button
               label="Confirm"
               onClick={() => {
-                setErrorMessage(undefined);
                 createActivityCollection(formState);
               }}
               disabled={isCreatingActivityCollection}
             />
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        }
+      />
+    </>
   );
 };
