@@ -29,6 +29,7 @@ export const activityCollectionRouter = createTRPCRouter({
     return {
       activityCollections: await db.activityCollection.findMany({
         where: { ownerId: userId },
+        orderBy: { createdAt: "desc" },
       }),
     };
   }),
