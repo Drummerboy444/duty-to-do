@@ -11,36 +11,33 @@ import {
   type ActivityCollectionFormState,
 } from "./ActivityCollectionForm";
 
-export const CreateActivityCollectionButton = ({
+export const EditActivityCollectionButton = ({
+  activityCollectionId,
+  defaultValues,
   refetch,
 }: {
+  activityCollectionId: string;
+  defaultValues: ActivityCollectionFormState;
   refetch: () => Promise<void>;
 }) => {
   const [open, setOpen] = useState(false);
 
-  const [formState, setFormState] = useState<ActivityCollectionFormState>({
-    name: "",
-    description: "",
-  });
+  const [formState, setFormState] =
+    useState<ActivityCollectionFormState>(defaultValues);
 
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const clearState = () => {
-    setFormState({ name: "", description: "" });
-    setErrorMessage(undefined);
-  };
-
   const {
-    mutate: createActivityCollection,
-    isLoading: isCreatingActivityCollection,
-  } = api.activityCollection.create.useMutation({
+    mutate: editActivityCollection,
+    isLoading: isEditingActivityCollection,
+  } = api.activityCollection.edit.useMutation({
     onSuccess: async ({ type }) => {
       switch (type) {
         case "SUCCESS": {
           await refetch();
           setOpen(false);
-          clearState();
-          toast.success("Successfully create activity collection");
+          setErrorMessage(undefined);
+          toast.success("Successfully edited activity collection");
           return;
         }
 
@@ -61,6 +58,24 @@ export const CreateActivityCollectionButton = ({
           return;
         }
 
+        case "NO_ACTIVITY_COLLECTION_FOUND": {
+          setOpen(false);
+          setErrorMessage(undefined);
+          setFormState(defaultValues);
+          toast.error("This activity collection does not exist");
+          return;
+        }
+
+        case "ACCESS_DENIED": {
+          setOpen(false);
+          setErrorMessage(undefined);
+          setFormState(defaultValues);
+          toast.error(
+            "You do not have permission to edit this activity collection",
+          );
+          return;
+        }
+
         default: {
           absurd(type);
         }
@@ -68,7 +83,7 @@ export const CreateActivityCollectionButton = ({
     },
     onError: () => {
       setErrorMessage(
-        "Something went wrote while creating you activity collection, please try again later",
+        "Something went wrote while editing you activity collection, please try again later",
       );
     },
   });
@@ -76,18 +91,19 @@ export const CreateActivityCollectionButton = ({
   return (
     <>
       <Button
-        label="Create Activity Collection"
+        label="Edit"
         onClick={() => {
           setOpen(true);
         }}
       />
 
       <Dialog
-        title="Create Activity Collection"
+        title="Edit Activity Collection"
         open={open}
         onOpenChange={(open) => {
           setOpen(open);
-          clearState();
+          setErrorMessage(undefined);
+          setFormState(defaultValues);
         }}
         content={
           <div className="flex flex-col gap-4">
@@ -105,23 +121,27 @@ export const CreateActivityCollectionButton = ({
         }
         footer={
           <div className="flex items-center justify-end gap-4">
-            {isCreatingActivityCollection && <LoadingSpinner />}
+            {isEditingActivityCollection && <LoadingSpinner />}
 
             <Button
               label="Cancel"
               onClick={() => {
                 setOpen(false);
-                clearState();
+                setErrorMessage(undefined);
+                setFormState(defaultValues);
               }}
-              disabled={isCreatingActivityCollection}
+              disabled={isEditingActivityCollection}
             />
 
             <Button
-              label="Create"
+              label="Save"
               onClick={() => {
-                createActivityCollection(formState);
+                editActivityCollection({
+                  id: activityCollectionId,
+                  ...formState,
+                });
               }}
-              disabled={isCreatingActivityCollection}
+              disabled={isEditingActivityCollection}
             />
           </div>
         }

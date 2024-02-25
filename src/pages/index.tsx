@@ -4,34 +4,44 @@ import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 
 dayjs.extend(relativeTime);
 
 const ActivityCollectionCard = ({
-  activityCollection: { name, description, createdAt },
+  activityCollection: { id, name, description, createdAt },
+  refetch,
 }: {
   activityCollection: {
+    id: string;
     name: string;
     description: string;
     createdAt: Date;
   };
+  refetch: () => Promise<void>;
 }) => {
   return (
     <div className="flex flex-col rounded-xl border border-gray-300 p-4 hover:cursor-pointer hover:border-black dark:border-gray-500 dark:hover:border-white">
       <h2 className="pb-4 text-xl">{name}</h2>
       <p className="pb-2">{description}</p>
       <div className="grow" />
-      <div className="flex justify-end">
+      <div className="flex justify-end pb-2">
         <div className="text-sm text-gray-500">
           Created {dayjs(createdAt).fromNow()}
         </div>
       </div>
+      <EditActivityCollectionButton
+        activityCollectionId={id}
+        defaultValues={{ name, description }}
+        refetch={refetch}
+      />
     </div>
   );
 };
 
 const ActivityCollectionGrid = ({
   activityCollections,
+  refetch,
 }: {
   activityCollections: {
     id: string;
@@ -39,6 +49,7 @@ const ActivityCollectionGrid = ({
     description: string;
     createdAt: Date;
   }[];
+  refetch: () => Promise<void>;
 }) => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,6 +57,7 @@ const ActivityCollectionGrid = ({
         <ActivityCollectionCard
           key={activityCollection.id}
           activityCollection={activityCollection}
+          refetch={refetch}
         />
       ))}
     </div>
@@ -77,7 +89,12 @@ export default function HomePage() {
           }}
         />
       </div>
-      <ActivityCollectionGrid activityCollections={activityCollections} />
+      <ActivityCollectionGrid
+        activityCollections={activityCollections}
+        refetch={async () => {
+          await refetchActivityCollections();
+        }}
+      />
     </main>
   );
 }

@@ -99,16 +99,24 @@ export const activityCollectionRouter = createTRPCRouter({
         if (!canEditActivityCollection)
           return { type: "ACCESS_DENIED" as const };
 
-        return {
-          type: "SUCCESS" as const,
-          activityCollection: await db.activityCollection.update({
-            where: { id },
-            data: {
-              name: preprocessedName,
-              description: preprocessedDescription,
-            },
-          }),
-        };
+        try {
+          return {
+            type: "SUCCESS" as const,
+            activityCollection: await db.activityCollection.update({
+              where: { id },
+              data: {
+                name: preprocessedName,
+                description: preprocessedDescription,
+              },
+            }),
+          };
+        } catch (error) {
+          if (isUniqueConstraintViolation(error)) {
+            return { type: "ACTIVITY_COLLECTION_ALREADY_EXISTS" as const };
+          }
+
+          throw error;
+        }
       },
     ),
 
