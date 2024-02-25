@@ -1,9 +1,11 @@
+import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
 import { api } from "~/utils/api";
 
 export default function HomePage() {
   const {
     data: activityCollectionsData,
     isLoading: isLoadingActivityCollections,
+    refetch: refetchActivityCollections,
   } = api.activityCollection.getAll.useQuery();
 
   if (isLoadingActivityCollections) return <div>Loading...</div>;
@@ -14,15 +16,23 @@ export default function HomePage() {
   const { activityCollections } = activityCollectionsData;
 
   return (
-    <main>
-      <div>Start</div>
-      <div className="h-48">box1</div>
-      <div className="h-48">box</div>
-      <div className="h-48">box</div>
-      <div className="h-48">box</div>
-      <div className="h-48">box</div>
+    <main className="flex flex-col gap-4 px-24 py-12">
+      <div>
+        <CreateActivityCollectionButton
+          refetch={async () => {
+            await refetchActivityCollections();
+          }}
+        />
+      </div>
       {activityCollections.map((activityCollection) => (
-        <div key={activityCollection.id}>Name: {activityCollection.name}</div>
+        <div key={activityCollection.id}>
+          <div>Name: {activityCollection.name}</div>
+          <div>Description: {activityCollection.description}</div>
+          <div>
+            Created at: {activityCollection.createdAt.toLocaleTimeString()}{" "}
+            {activityCollection.createdAt.toLocaleDateString()}
+          </div>
+        </div>
       ))}
     </main>
   );
