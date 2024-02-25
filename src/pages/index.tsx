@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
 import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
+import { DeleteActivityCollectionButton } from "~/components/DeleteActivityCollectionButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
@@ -22,8 +23,14 @@ const ActivityCollectionCard = ({
 }) => {
   return (
     <div className="flex flex-col rounded-xl border border-gray-300 p-4 hover:cursor-pointer hover:border-black dark:border-gray-500 dark:hover:border-white">
-      <div className="flex justify-between gap-2 pb-4">
-        <h2 className="text-xl">{name}</h2>
+      <div className="flex gap-2 pb-4">
+        <h2 className="flex-1 text-xl">{name}</h2>
+        <div>
+          <DeleteActivityCollectionButton
+            activityCollectionId={id}
+            refetch={refetch}
+          />
+        </div>
         <div>
           <EditActivityCollectionButton
             activityCollectionId={id}
