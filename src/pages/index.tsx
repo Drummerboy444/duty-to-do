@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
 import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
-import { DeleteActivityCollectionButton } from "~/components/DeleteActivityCollectionButton";
+import { DeleteActivityCollectionButton } from "~/components/ActivityCollectionForm/DeleteActivityCollectionButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";

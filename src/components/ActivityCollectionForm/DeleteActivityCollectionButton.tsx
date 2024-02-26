@@ -2,12 +2,12 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
-import { Dialog } from "./Dialog";
-import { IconButton } from "./IconButton";
+import { Dialog } from "../Dialog";
+import { IconButton } from "../IconButton";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { ErrorCallout } from "./ErrorCallout";
-import { LoadingSpinner } from "./LoadingSpinner";
-import { Button } from "./Button";
+import { ErrorCallout } from "../ErrorCallout";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { Button } from "../Button";
 
 export const DeleteActivityCollectionButton = ({
   activityCollectionId,
