@@ -6,47 +6,32 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { type PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
+import { Button } from "~/components/Button";
+import { useMounted } from "~/hooks/use-mounted";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 import { isSignInRoute, isSignUpRoute } from "~/utils/routing";
 
 const Header = () => {
+  const mounted = useMounted();
   const { theme, setTheme } = useTheme();
 
+  if (!mounted) return undefined;
+
   return (
-    <div className="sticky top-0 flex min-h-16 gap-8 bg-white p-4 dark:bg-zinc-900">
-      <div className="flex items-center gap-2 ">
-        <input
-          type="checkbox"
-          checked={theme === "light"}
-          onChange={() => {
-            setTheme("light");
-          }}
-        />
-        <span>Light</span>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={theme === "dark"}
-          onChange={() => {
+    <div className="sticky top-0 flex min-h-16 gap-2 bg-white p-4 dark:bg-zinc-900">
+      <Button
+        onClick={() => {
+          if (theme === "light") {
             setTheme("dark");
-          }}
-        />
-        <span>Dark</span>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={theme === "system"}
-          onChange={() => {
+          } else if (theme === "dark") {
             setTheme("system");
-          }}
-        />
-        <span>System</span>
-      </div>
+          } else {
+            setTheme("light");
+          }
+        }}
+        label={`Theme: ${theme}`}
+      />
 
       <div className="grow" />
 
