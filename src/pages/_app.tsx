@@ -10,9 +10,48 @@ import { type PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import { Button } from "~/components/Button";
 import { useMounted } from "~/hooks/use-mounted";
+import { useSaveActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
-import { HOME_ROUTE, isSignInRoute, isSignUpRoute } from "~/utils/routing";
+import {
+  HOME_ROUTE,
+  getActivityCollectionRoute,
+  isSignInRoute,
+  isSignUpRoute,
+} from "~/utils/routing";
+
+const BreadCrumbs = () => {
+  const queryParams = useSaveActivityCollectionQueryParams();
+
+  const { data } = api.activityCollection.get.useQuery(
+    queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"
+      ? { id: queryParams.activityCollectionId }
+      : { id: "" },
+    {
+      enabled:
+        queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE",
+    },
+  );
+
+  return (
+    <>
+      <Link href={HOME_ROUTE}>
+        <HomeIcon />
+      </Link>
+
+      {data !== undefined && data.type === "SUCCESS" && (
+        <>
+          <p className="select-none text-2xl font-bold text-gray-300 dark:text-zinc-700">
+            /
+          </p>
+          <Link href={getActivityCollectionRoute(data.activityCollection.id)}>
+            {data.activityCollection.name}
+          </Link>
+        </>
+      )}
+    </>
+  );
+};
 
 const Header = () => {
   const mounted = useMounted();
@@ -20,9 +59,7 @@ const Header = () => {
 
   return (
     <div className="sticky top-0 flex min-h-16 flex-wrap items-center gap-4 bg-white p-4 dark:bg-zinc-900">
-      <Link href={HOME_ROUTE}>
-        <HomeIcon />
-      </Link>
+      <BreadCrumbs />
 
       <div className="grow" />
 
