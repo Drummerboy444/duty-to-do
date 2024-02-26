@@ -1,8 +1,10 @@
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { HomeIcon } from "@radix-ui/react-icons";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { type PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
@@ -10,30 +12,34 @@ import { Button } from "~/components/Button";
 import { useMounted } from "~/hooks/use-mounted";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
-import { isSignInRoute, isSignUpRoute } from "~/utils/routing";
+import { HOME_ROUTE, isSignInRoute, isSignUpRoute } from "~/utils/routing";
 
 const Header = () => {
   const mounted = useMounted();
   const { theme, setTheme } = useTheme();
 
-  if (!mounted) return undefined;
-
   return (
-    <div className="sticky top-0 flex min-h-16 gap-2 bg-white p-4 dark:bg-zinc-900">
-      <Button
-        onClick={() => {
-          if (theme === "light") {
-            setTheme("dark");
-          } else if (theme === "dark") {
-            setTheme("system");
-          } else {
-            setTheme("light");
-          }
-        }}
-        label={`Theme: ${theme}`}
-      />
+    <div className="sticky top-0 flex min-h-16 flex-wrap items-center gap-4 bg-white p-4 dark:bg-zinc-900">
+      <Link href={HOME_ROUTE}>
+        <HomeIcon />
+      </Link>
 
       <div className="grow" />
+
+      {mounted && (
+        <Button
+          onClick={() => {
+            if (theme === "light") {
+              setTheme("dark");
+            } else if (theme === "dark") {
+              setTheme("system");
+            } else {
+              setTheme("light");
+            }
+          }}
+          label={`Theme: ${theme}`}
+        />
+      )}
 
       <UserButton afterSignOutUrl="/" />
     </div>
