@@ -51,7 +51,7 @@ export const activityCollectionRouter = createTRPCRouter({
 
       try {
         return {
-          type: "SUCCESS" as const,
+          ...SUCCESS,
           activityCollection: await db.activityCollection.create({
             data: {
               ownerId: userId,
@@ -101,7 +101,7 @@ export const activityCollectionRouter = createTRPCRouter({
 
         try {
           return {
-            type: "SUCCESS" as const,
+            ...SUCCESS,
             activityCollection: await db.activityCollection.update({
               where: { id },
               data: {
@@ -137,7 +137,7 @@ export const activityCollectionRouter = createTRPCRouter({
         return { type: "ACCESS_DENIED" as const };
 
       return {
-        type: "SUCCESS" as const,
+        ...SUCCESS,
         activityCollection: await db.activityCollection.delete({
           where: { id },
         }),
