@@ -109,6 +109,11 @@ export default function HomePage() {
           await refetchActivityCollections();
         }}
       />
+      {activityCollections.length === 0 && (
+        <div className="italic text-gray-500">
+          You don&apos;t have any activity collections, try creating one!
+        </div>
+      )}
     </main>
   );
 }
