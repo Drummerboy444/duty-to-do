@@ -1,3 +1,4 @@
+import { type MouseEventHandler } from "react";
 import { noOp } from "~/utils/no-op";
 
 export const Button = ({
@@ -6,7 +7,7 @@ export const Button = ({
   disabled = false,
 }: {
   label: string;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
 }) => {
   return (

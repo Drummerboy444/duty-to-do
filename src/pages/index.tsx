@@ -1,11 +1,13 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 import { CreateActivityCollectionButton } from "~/components/ActivityCollectionForm/CreateActivityCollectionButton";
-import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 import { DeleteActivityCollectionButton } from "~/components/ActivityCollectionForm/DeleteActivityCollectionButton";
+import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { api } from "~/utils/api";
+import { getActivityCollectionRoute } from "~/utils/routing";
 
 dayjs.extend(relativeTime);
 
@@ -22,7 +24,10 @@ const ActivityCollectionCard = ({
   refetch: () => Promise<void>;
 }) => {
   return (
-    <div className="flex flex-col rounded-xl border border-gray-300 p-4 hover:cursor-pointer hover:border-black dark:border-gray-500 dark:hover:border-white">
+    <Link
+      href={getActivityCollectionRoute(id)}
+      className="flex flex-col rounded-xl border border-gray-300 p-4 hover:border-black dark:border-gray-500 dark:hover:border-white"
+    >
       <div className="flex gap-2 pb-4">
         <h2 className="flex-1 text-xl">{name}</h2>
         <div>
@@ -49,7 +54,7 @@ const ActivityCollectionCard = ({
           Created {dayjs(createdAt).fromNow()}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

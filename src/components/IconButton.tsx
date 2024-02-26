@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type MouseEventHandler, type ReactNode } from "react";
 import { noOp } from "~/utils/no-op";
 
 export const IconButton = ({
@@ -7,7 +7,7 @@ export const IconButton = ({
   disabled = false,
 }: {
   icon: ReactNode;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
 }) => {
   return (

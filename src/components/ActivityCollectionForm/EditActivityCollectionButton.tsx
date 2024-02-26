@@ -94,7 +94,9 @@ export const EditActivityCollectionButton = ({
     <>
       <IconButton
         icon={<Pencil1Icon />}
-        onClick={() => {
+        onClick={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
           setOpen(true);
         }}
       />
@@ -127,7 +129,9 @@ export const EditActivityCollectionButton = ({
 
             <Button
               label="Cancel"
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 setOpen(false);
                 setErrorMessage(undefined);
                 setFormState(defaultValues);
@@ -137,7 +141,9 @@ export const EditActivityCollectionButton = ({
 
             <Button
               label="Save"
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 editActivityCollection({
                   id: activityCollectionId,
                   ...formState,
