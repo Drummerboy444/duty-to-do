@@ -18,3 +18,7 @@ const getSafeQueryParamsHook =
       {} as Record<T, string>,
     );
   };
+
+export const useSaveActivityCollectionQueryParams = getSafeQueryParamsHook([
+  "activityCollectionId",
+]);

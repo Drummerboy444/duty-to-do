@@ -95,7 +95,7 @@ export default function HomePage() {
   const { activityCollections } = activityCollectionsData;
 
   return (
-    <main className="flex flex-col gap-4 px-8 py-12  sm:px-16 lg:px-24">
+    <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
       <div>
         <CreateActivityCollectionButton
           refetch={async () => {
