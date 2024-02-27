@@ -91,9 +91,7 @@ export const DeleteActivityCollectionButton = ({
 
             <Button
               label="Cancel"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
+              onClick={() => {
                 setOpen(false);
                 setErrorMessage(undefined);
               }}
@@ -102,9 +100,7 @@ export const DeleteActivityCollectionButton = ({
 
             <Button
               label="Delete"
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
+              onClick={() => {
                 deleteActivityCollection({
                   id: activityCollectionId,
                 });
