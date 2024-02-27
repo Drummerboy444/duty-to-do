@@ -44,14 +44,21 @@ export default function ActivityCollectionPage() {
       } = activityCollectionData;
 
       return (
-        <main className="px-8 py-12 sm:px-16 lg:px-24">
-          <h1 className="pb-4 text-4xl">{name}</h1>
-          <p className="pb-4">{description}</p>
-          <div>
-            {activities.map((activity) => (
-              <p key={activity.id}>{activity.name}</p>
-            ))}
-          </div>
+        <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
+          <h1 className="text-4xl">{name}</h1>
+          <p>{description}</p>
+          {activities.length > 0 ? (
+            <div>
+              {activities.map((activity) => (
+                <p key={activity.id}>{activity.name}</p>
+              ))}
+            </div>
+          ) : (
+            <p className="italic text-gray-500">
+              You don&apos;t have any activities in this collection, try
+              creating one!
+            </p>
+          )}
         </main>
       );
     }

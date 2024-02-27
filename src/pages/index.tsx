@@ -108,16 +108,17 @@ export default function HomePage() {
           }}
         />
       </div>
-      <ActivityCollectionGrid
-        activityCollections={activityCollections}
-        refetch={async () => {
-          await refetchActivityCollections();
-        }}
-      />
-      {activityCollections.length === 0 && (
-        <div className="italic text-gray-500">
+      {activityCollections.length > 0 ? (
+        <ActivityCollectionGrid
+          activityCollections={activityCollections}
+          refetch={async () => {
+            await refetchActivityCollections();
+          }}
+        />
+      ) : (
+        <p className="italic text-gray-500">
           You don&apos;t have any activity collections, try creating one!
-        </div>
+        </p>
       )}
     </main>
   );
