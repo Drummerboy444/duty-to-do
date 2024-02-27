@@ -13,6 +13,7 @@ export const activityCollectionRouter = createTRPCRouter({
     .query(async ({ ctx: { db, userId }, input: { id } }) => {
       const activityCollection = await db.activityCollection.findUnique({
         where: { id },
+        include: { activities: true },
       });
 
       if (activityCollection === null)

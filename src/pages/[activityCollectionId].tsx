@@ -40,13 +40,18 @@ export default function ActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { name, description },
+        activityCollection: { name, description, activities },
       } = activityCollectionData;
 
       return (
         <main className="px-8 py-12 sm:px-16 lg:px-24">
           <h1 className="pb-4 text-4xl">{name}</h1>
-          <p>{description}</p>
+          <p className="pb-4">{description}</p>
+          <div>
+            {activities.map((activity) => (
+              <p key={activity.id}>{activity.name}</p>
+            ))}
+          </div>
         </main>
       );
     }
