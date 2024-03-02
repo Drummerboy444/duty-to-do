@@ -1,11 +1,16 @@
-import { SignUp } from "@clerk/nextjs";
+import { SignUp, useUser } from "@clerk/nextjs";
+import { LoadingPage } from "~/components/LoadingPage";
 
 export default function SignUpPage() {
+  const { isLoaded, isSignedIn } = useUser();
+
+  if (!isLoaded) return <LoadingPage />;
+
+  if (isSignedIn) return undefined;
+
   return (
-    <main>
-      <div className="flex h-screen items-center justify-center">
-        <SignUp />
-      </div>
+    <main className="flex h-screen items-center justify-center">
+      <SignUp />
     </main>
   );
 }
