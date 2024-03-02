@@ -25,7 +25,7 @@ export const safeGetUserByUsername = async (username: string) => {
   });
 
   const matchingUser = potentialUsers.find(
-    (user) => user.username === username
+    (user) => user.username === username,
   );
 
   return matchingUser === undefined ? "NO_USER_FOUND" : matchingUser;
