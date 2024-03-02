@@ -121,16 +121,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             name="description"
             content="App to help you choose what to do"
           />
-          <link
-            href="light-mode-favicon.svg"
-            rel="icon"
-            media="(prefers-color-scheme: light)"
-          />
-          <link
-            href="dark-mode-favicon.svg"
-            rel="icon"
-            media="(prefers-color-scheme: dark)"
-          />
+          <link rel="icon" href="/favicon.ico" />
         </Head>
         {!isSignInRoute(route) && !isSignUpRoute(route) && <Header />}
         <Component {...pageProps} />
