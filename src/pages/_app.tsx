@@ -83,12 +83,16 @@ const Header = () => {
   );
 };
 
-const ClerkWrapper = ({ children }: PropsWithChildren) => {
+const ClerkWrapper = ({
+  children,
+  pageProps,
+}: PropsWithChildren & { pageProps: object }) => {
   const { resolvedTheme } = useTheme();
 
   return (
     <ClerkProvider
       {...(resolvedTheme === "dark" ? { appearance: { baseTheme: dark } } : {})}
+      {...pageProps}
     >
       <Toaster
         position="bottom-center"
@@ -114,7 +118,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <ThemeProvider attribute="class">
-      <ClerkWrapper>
+      <ClerkWrapper pageProps={pageProps}>
         <Head>
           <title>Duty to do</title>
           <meta
