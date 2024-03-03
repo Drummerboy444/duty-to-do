@@ -100,4 +100,24 @@ export const tagsRouter = createTRPCRouter({
         throw error;
       }
     }),
+
+  delete: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx: { db, userId }, input: { id } }) => {
+      const tag = await db.tag.findUnique({
+        where: { id },
+        include: { activityCollection: true },
+      });
+
+      if (tag === null) return { type: "NO_TAG_FOUND" as const };
+
+      const canDeleteTag = tag.activityCollection.ownerId === userId;
+
+      if (!canDeleteTag) return ACCESS_DENIED;
+
+      return {
+        ...SUCCESS,
+        tag: await db.tag.delete({ where: { id } }),
+      };
+    }),
 });
