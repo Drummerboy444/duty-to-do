@@ -88,4 +88,24 @@ export const activitiesRouter = createTRPCRouter({
         throw error;
       }
     }),
+
+  delete: privateProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx: { db, userId }, input: { id } }) => {
+      const activity = await db.activity.findUnique({
+        where: { id },
+        include: { activityCollection: true },
+      });
+
+      if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
+
+      const canDeleteActivity = activity.activityCollection.ownerId === userId;
+
+      if (!canDeleteActivity) return ACCESS_DENIED;
+
+      return {
+        ...SUCCESS,
+        activity: await db.activity.delete({ where: { id } }),
+      };
+    }),
 });
