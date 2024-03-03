@@ -97,8 +97,7 @@ export const activityCollectionsRouter = createTRPCRouter({
 
         const canEditActivityCollection = activityCollection.ownerId === userId;
 
-        if (!canEditActivityCollection)
-          return { type: "ACCESS_DENIED" as const };
+        if (!canEditActivityCollection) return ACCESS_DENIED;
 
         try {
           return {
@@ -134,8 +133,7 @@ export const activityCollectionsRouter = createTRPCRouter({
 
       const canDeleteActivityCollection = activityCollection.ownerId === userId;
 
-      if (!canDeleteActivityCollection)
-        return { type: "ACCESS_DENIED" as const };
+      if (!canDeleteActivityCollection) return ACCESS_DENIED;
 
       return {
         ...SUCCESS,
