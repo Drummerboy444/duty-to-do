@@ -13,7 +13,7 @@ export default function ActivityCollectionPage() {
   const {
     data: activityCollectionData,
     isLoading: isLoadingActivityCollection,
-  } = api.activityCollection.get.useQuery(
+  } = api.activityCollections.get.useQuery(
     queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"
       ? { id: queryParams.activityCollectionId }
       : { id: "" },

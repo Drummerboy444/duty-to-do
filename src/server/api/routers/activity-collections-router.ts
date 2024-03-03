@@ -3,7 +3,7 @@ import { createTRPCRouter, privateProcedure } from "../trpc";
 import { ACCESS_DENIED, SUCCESS } from "../utils/generic-responses";
 import { isUniqueConstraintViolation } from "../utils/db-violations";
 
-export const activityCollectionRouter = createTRPCRouter({
+export const activityCollectionsRouter = createTRPCRouter({
   get: privateProcedure
     .input(
       z.object({

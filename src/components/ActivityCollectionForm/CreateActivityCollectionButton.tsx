@@ -33,7 +33,7 @@ export const CreateActivityCollectionButton = ({
   const {
     mutate: createActivityCollection,
     isLoading: isCreatingActivityCollection,
-  } = api.activityCollection.create.useMutation({
+  } = api.activityCollections.create.useMutation({
     onSuccess: async ({ type }) => {
       switch (type) {
         case "SUCCESS": {

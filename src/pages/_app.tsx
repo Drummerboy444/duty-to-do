@@ -34,7 +34,7 @@ const BreadCrumbs = () => {
   const { route } = useRouter();
   const queryParams = useSafeActivityCollectionQueryParams();
 
-  const { data } = api.activityCollection.get.useQuery(
+  const { data } = api.activityCollections.get.useQuery(
     queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"
       ? { id: queryParams.activityCollectionId }
       : { id: "" },

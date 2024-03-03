@@ -32,7 +32,7 @@ export const EditActivityCollectionButton = ({
   const {
     mutate: editActivityCollection,
     isLoading: isEditingActivityCollection,
-  } = api.activityCollection.edit.useMutation({
+  } = api.activityCollections.edit.useMutation({
     onSuccess: async ({ type }) => {
       switch (type) {
         case "SUCCESS": {

@@ -88,7 +88,7 @@ export default function HomePage() {
     data: activityCollectionsData,
     isLoading: isLoadingActivityCollections,
     refetch: refetchActivityCollections,
-  } = api.activityCollection.getAll.useQuery();
+  } = api.activityCollections.getAll.useQuery();
 
   if (isLoadingActivityCollections) return <LoadingPage />;
 

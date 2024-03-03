@@ -22,7 +22,7 @@ export const DeleteActivityCollectionButton = ({
   const {
     mutate: deleteActivityCollection,
     isLoading: isDeletingActivityCollection,
-  } = api.activityCollection.delete.useMutation({
+  } = api.activityCollections.delete.useMutation({
     onSuccess: async ({ type }) => {
       switch (type) {
         case "SUCCESS": {
