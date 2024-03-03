@@ -16,8 +16,10 @@ import {
   ACCOUNT_ROUTE,
   HOME_ROUTE,
   SIGN_IN_ROUTE,
+  getActivityCollectionEditRoute,
   getActivityCollectionRoute,
   isAccountRoute,
+  isEditRoute,
   isSignInRoute,
   isSignUpRoute,
 } from "~/utils/routing";
@@ -61,6 +63,18 @@ const BreadCrumbs = () => {
           <Link href={getActivityCollectionRoute(data.activityCollection.id)}>
             {data.activityCollection.name}
           </Link>
+          {isEditRoute(route) && (
+            <>
+              <BreadCrumbSlash />
+              <Link
+                href={getActivityCollectionEditRoute(
+                  data.activityCollection.id,
+                )}
+              >
+                Edit
+              </Link>
+            </>
+          )}
         </>
       )}
     </>
