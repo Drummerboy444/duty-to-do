@@ -15,6 +15,7 @@ import "~/styles/globals.css";
 import { api } from "~/utils/api";
 import {
   HOME_ROUTE,
+  SIGN_IN_ROUTE,
   getActivityCollectionRoute,
   isSignInRoute,
   isSignUpRoute,
@@ -78,7 +79,7 @@ const Header = () => {
         />
       )}
 
-      <UserButton afterSignOutUrl="/" />
+      <UserButton afterSignOutUrl={SIGN_IN_ROUTE} />
     </div>
   );
 };
