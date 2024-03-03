@@ -1,6 +1,6 @@
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { HomeIcon } from "@radix-ui/react-icons";
+import { HomeIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { type PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
-import { Button } from "~/components/Button";
 import { useMounted } from "~/hooks/use-mounted";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import "~/styles/globals.css";
@@ -79,18 +78,34 @@ const Header = () => {
       <div className="grow" />
 
       {mounted && (
-        <Button
-          onClick={() => {
-            if (theme === "light") {
-              setTheme("dark");
-            } else if (theme === "dark") {
-              setTheme("system");
-            } else {
-              setTheme("light");
-            }
-          }}
-          label={`Theme: ${theme}`}
-        />
+        <>
+          {theme === "light" && (
+            <SunIcon
+              className="hover:cursor-pointer"
+              onClick={() => {
+                setTheme("dark");
+              }}
+            />
+          )}
+
+          {theme === "dark" && (
+            <MoonIcon
+              className="hover:cursor-pointer"
+              onClick={() => {
+                setTheme("system");
+              }}
+            />
+          )}
+
+          {theme === "system" && (
+            <LaptopIcon
+              className="hover:cursor-pointer"
+              onClick={() => {
+                setTheme("light");
+              }}
+            />
+          )}
+        </>
       )}
 
       <div className="h-[32px] w-[32px] rounded-full bg-gray-300 dark:bg-gray-700" />
