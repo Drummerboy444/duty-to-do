@@ -18,11 +18,19 @@ import {
   HOME_ROUTE,
   SIGN_IN_ROUTE,
   getActivityCollectionRoute,
+  isAccountRoute,
   isSignInRoute,
   isSignUpRoute,
 } from "~/utils/routing";
 
+const BreadCrumbSlash = () => (
+  <p className="select-none text-2xl font-bold text-gray-300 dark:text-zinc-700">
+    /
+  </p>
+);
+
 const BreadCrumbs = () => {
+  const { route } = useRouter();
   const queryParams = useSafeActivityCollectionQueryParams();
 
   const { data } = api.activityCollection.get.useQuery(
@@ -41,11 +49,16 @@ const BreadCrumbs = () => {
         <HomeIcon />
       </Link>
 
+      {isAccountRoute(route) && (
+        <>
+          <BreadCrumbSlash />
+          <Link href={ACCOUNT_ROUTE}>Account</Link>
+        </>
+      )}
+
       {data !== undefined && data.type === "SUCCESS" && (
         <>
-          <p className="select-none text-2xl font-bold text-gray-300 dark:text-zinc-700">
-            /
-          </p>
+          <BreadCrumbSlash />
           <Link href={getActivityCollectionRoute(data.activityCollection.id)}>
             {data.activityCollection.name}
           </Link>
