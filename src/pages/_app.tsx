@@ -10,7 +10,7 @@ import { type PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import { Button } from "~/components/Button";
 import { useMounted } from "~/hooks/use-mounted";
-import { useSaveActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
+import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
 import {
@@ -23,7 +23,7 @@ import {
 } from "~/utils/routing";
 
 const BreadCrumbs = () => {
-  const queryParams = useSaveActivityCollectionQueryParams();
+  const queryParams = useSafeActivityCollectionQueryParams();
 
   const { data } = api.activityCollection.get.useQuery(
     queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"

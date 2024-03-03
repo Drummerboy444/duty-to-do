@@ -19,6 +19,6 @@ const getSafeQueryParamsHook =
     );
   };
 
-export const useSaveActivityCollectionQueryParams = getSafeQueryParamsHook([
+export const useSafeActivityCollectionQueryParams = getSafeQueryParamsHook([
   "activityCollectionId",
 ]);

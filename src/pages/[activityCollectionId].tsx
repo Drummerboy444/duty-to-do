@@ -1,11 +1,11 @@
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
-import { useSaveActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
+import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
 
 export default function ActivityCollectionPage() {
-  const queryParams = useSaveActivityCollectionQueryParams();
+  const queryParams = useSafeActivityCollectionQueryParams();
 
   const {
     data: activityCollectionData,
