@@ -18,6 +18,7 @@ model ActivityCollection {
   name String
   description String
   activities Activity[]
+  tags Tag[]
 
   @@unique([name, ownerId])
 }
@@ -31,6 +32,23 @@ model Activity {
   activityCollection ActivityCollection @relation(fields: [activityCollectionId], references: [id], onDelete: Cascade)
 
   name String
+  tags Tag[]
+
+  @@unique([name, activityCollectionId])
+
+  @@index([activityCollectionId])
+}
+
+model Tag {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activityCollectionId String
+  activityCollection ActivityCollection @relation(fields: [activityCollectionId], references: [id], onDelete: Cascade)
+
+  name String
+  activities Activity[]
 
   @@unique([name, activityCollectionId])
 
