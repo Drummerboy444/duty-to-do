@@ -67,4 +67,37 @@ export const tagsRouter = createTRPCRouter({
         }
       },
     ),
+
+  edit: privateProcedure
+    .input(z.object({ id: z.string(), name: z.string() }))
+    .mutation(async ({ ctx: { db, userId }, input: { id, name } }) => {
+      const preprocessedName = name.trim();
+      if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
+
+      const tag = await db.tag.findUnique({
+        where: { id },
+        include: { activityCollection: true },
+      });
+
+      if (tag === null) return { type: "NO_TAG_FOUND" as const };
+
+      const canEditTag = tag.activityCollection.ownerId === userId;
+
+      if (!canEditTag) return ACCESS_DENIED;
+
+      try {
+        return {
+          ...SUCCESS,
+          tag: await db.tag.update({
+            where: { id },
+            data: { name: preprocessedName },
+          }),
+        };
+      } catch (error) {
+        if (isUniqueConstraintViolation(error))
+          return { type: "TAG_ALREADY_EXISTS" as const };
+
+        throw error;
+      }
+    }),
 });
