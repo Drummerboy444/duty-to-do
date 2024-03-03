@@ -1,8 +1,11 @@
+import { Pencil1Icon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
+import { getActivityCollectionEditRoute } from "~/utils/routing";
 
 export default function ActivityCollectionPage() {
   const queryParams = useSafeActivityCollectionQueryParams();
@@ -40,13 +43,16 @@ export default function ActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { name, description, activities },
+        activityCollection: { id, name, description, activities },
       } = activityCollectionData;
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
           <h1 className="text-4xl">{name}</h1>
           <p>{description}</p>
+          <Link href={getActivityCollectionEditRoute(id)}>
+            <Pencil1Icon />
+          </Link>
           {activities.length > 0 ? (
             <div>
               {activities.map((activity) => (

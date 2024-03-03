@@ -11,3 +11,6 @@ export const isAccountRoute = startsWith(ACCOUNT_ROUTE);
 
 export const getActivityCollectionRoute = (activityCollectionId: string) =>
   `/${activityCollectionId}`;
+
+export const getActivityCollectionEditRoute = (activityCollectionId: string) =>
+  `/${activityCollectionId}/edit`;
