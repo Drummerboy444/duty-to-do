@@ -50,4 +50,42 @@ export const activitiesRouter = createTRPCRouter({
         }
       },
     ),
+
+  edit: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx: { db, userId }, input: { id, name } }) => {
+      const preprocessedName = name.trim();
+      if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
+
+      const activity = await db.activity.findUnique({
+        where: { id },
+        include: { activityCollection: true },
+      });
+
+      if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
+
+      const canEditActivity = activity.activityCollection.ownerId === userId;
+
+      if (!canEditActivity) return ACCESS_DENIED;
+
+      try {
+        return {
+          ...SUCCESS,
+          activity: await db.activity.update({
+            where: { id },
+            data: { name: preprocessedName },
+          }),
+        };
+      } catch (error) {
+        if (isUniqueConstraintViolation(error))
+          return { type: "ACTIVITY_ALREADY_EXISTS" as const };
+
+        throw error;
+      }
+    }),
 });
