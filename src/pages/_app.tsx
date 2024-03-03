@@ -93,11 +93,14 @@ const Header = () => {
         />
       )}
 
-      <UserButton
-        afterSignOutUrl={SIGN_IN_ROUTE}
-        userProfileMode="navigation"
-        userProfileUrl={ACCOUNT_ROUTE}
-      />
+      <div className="h-[32px] w-[32px] rounded-full bg-gray-300 dark:bg-gray-700" />
+      <div className="absolute right-[16px] top-[16px]">
+        <UserButton
+          afterSignOutUrl={SIGN_IN_ROUTE}
+          userProfileMode="navigation"
+          userProfileUrl={ACCOUNT_ROUTE}
+        />
+      </div>
     </div>
   );
 };
