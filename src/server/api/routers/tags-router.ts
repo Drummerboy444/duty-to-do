@@ -9,13 +9,12 @@ export const tagsRouter = createTRPCRouter({
       z.object({
         activityCollectionId: z.string(),
         name: z.string(),
-        activityId: z.string().optional(),
       }),
     )
     .mutation(
       async ({
         ctx: { db, userId },
-        input: { activityCollectionId, name, activityId },
+        input: { activityCollectionId, name },
       }) => {
         const preprocessedName = name.trim();
         if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
@@ -33,18 +32,6 @@ export const tagsRouter = createTRPCRouter({
 
         if (!canCreateTag) return ACCESS_DENIED;
 
-        if (activityId !== undefined) {
-          const activity = await db.activity.findUnique({
-            where: { id: activityId },
-            include: { activityCollection: true },
-          });
-
-          if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
-
-          if (activity.activityCollectionId !== activityCollection.id)
-            return { type: "ACTIVITY_NOT_IN_COLLECTION" as const };
-        }
-
         try {
           return {
             ...SUCCESS,
@@ -52,9 +39,6 @@ export const tagsRouter = createTRPCRouter({
               data: {
                 activityCollectionId,
                 name: preprocessedName,
-                ...(activityId === undefined
-                  ? {}
-                  : { activities: { connect: { id: activityId } } }),
               },
             }),
           };
