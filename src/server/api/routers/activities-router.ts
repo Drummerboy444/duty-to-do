@@ -55,13 +55,11 @@ export const activitiesRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.string(),
+        name: z.string().optional(),
+        tagIds: z.string().array().optional(),
       }),
     )
-    .mutation(async ({ ctx: { db, userId }, input: { id, name } }) => {
-      const preprocessedName = name.trim();
-      if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
-
+    .mutation(async ({ ctx: { db, userId }, input: { id, name, tagIds } }) => {
       const activity = await db.activity.findUnique({
         where: { id },
         include: { activityCollection: true },
@@ -73,12 +71,36 @@ export const activitiesRouter = createTRPCRouter({
 
       if (!canEditActivity) return ACCESS_DENIED;
 
+      if (name !== undefined && name.trim() === "")
+        return { type: "EMPTY_NAME" as const };
+
+      if (tagIds !== undefined) {
+        const tags = await db.tag.findMany({
+          where: { id: { in: tagIds } },
+        });
+
+        if (tags.length !== tagIds.length)
+          return { type: "INVALID_TAG_IDS" as const };
+
+        if (
+          !tags.every(
+            (tag) => tag.activityCollectionId === activity.activityCollectionId,
+          )
+        )
+          return { type: "INVALID_TAG_IDS" as const };
+      }
+
       try {
         return {
           ...SUCCESS,
           activity: await db.activity.update({
             where: { id },
-            data: { name: preprocessedName },
+            data: {
+              ...(name === undefined ? {} : { name: name.trim() }),
+              ...(tagIds === undefined
+                ? {}
+                : { set: tagIds.map((id) => ({ id })) }),
+            },
           }),
         };
       } catch (error) {
@@ -87,90 +109,6 @@ export const activitiesRouter = createTRPCRouter({
 
         throw error;
       }
-    }),
-
-  addTag: privateProcedure
-    .input(
-      z.object({
-        activityId: z.string(),
-        tagId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx: { db, userId }, input: { activityId, tagId } }) => {
-      const activity = await db.activity.findUnique({
-        where: { id: activityId },
-        include: { activityCollection: true },
-      });
-
-      if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
-
-      const canAccessActivity = activity.activityCollection.ownerId === userId;
-
-      if (!canAccessActivity) return ACCESS_DENIED;
-
-      const tag = await db.tag.findUnique({
-        where: { id: tagId },
-        include: { activityCollection: true },
-      });
-
-      if (tag === null) return { type: "NO_TAG_FOUND" as const };
-
-      const canAccessTag = tag.activityCollection.ownerId === userId;
-
-      if (!canAccessTag) return ACCESS_DENIED;
-
-      if (activity.activityCollectionId !== tag.activityCollectionId)
-        return { type: "IN_DIFFERENT_COLLECTIONS" as const };
-
-      return {
-        ...SUCCESS,
-        activity: await db.activity.update({
-          where: { id: activityId },
-          data: { tags: { connect: { id: tagId } } },
-        }),
-      };
-    }),
-
-  removeTag: privateProcedure
-    .input(
-      z.object({
-        activityId: z.string(),
-        tagId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx: { db, userId }, input: { activityId, tagId } }) => {
-      const activity = await db.activity.findUnique({
-        where: { id: activityId },
-        include: { activityCollection: true },
-      });
-
-      if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
-
-      const canAccessActivity = activity.activityCollection.ownerId === userId;
-
-      if (!canAccessActivity) return ACCESS_DENIED;
-
-      const tag = await db.tag.findUnique({
-        where: { id: tagId },
-        include: { activityCollection: true },
-      });
-
-      if (tag === null) return { type: "NO_TAG_FOUND" as const };
-
-      const canAccessTag = tag.activityCollection.ownerId === userId;
-
-      if (!canAccessTag) return ACCESS_DENIED;
-
-      if (activity.activityCollectionId !== tag.activityCollectionId)
-        return { type: "IN_DIFFERENT_COLLECTIONS" as const };
-
-      return {
-        ...SUCCESS,
-        activity: await db.activity.update({
-          where: { id: activityId },
-          data: { tags: { disconnect: { id: tagId } } },
-        }),
-      };
     }),
 
   delete: privateProcedure
