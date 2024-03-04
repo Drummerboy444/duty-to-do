@@ -62,6 +62,7 @@ export const DeleteActivityCollectionButton = ({
     <>
       <IconButton
         icon={<TrashIcon />}
+        warn
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -100,6 +101,7 @@ export const DeleteActivityCollectionButton = ({
 
             <Button
               label="Delete"
+              warn
               onClick={() => {
                 deleteActivityCollection({
                   id: activityCollectionId,
