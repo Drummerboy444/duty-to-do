@@ -113,7 +113,7 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="sticky top-0 flex min-h-16 flex-wrap items-center gap-4 bg-white p-4 dark:bg-zinc-900">
+    <div className="sticky top-0 z-10 flex min-h-16 flex-wrap items-center gap-4 bg-white p-4 dark:bg-zinc-900">
       <BreadCrumbs />
 
       <div className="grow" />

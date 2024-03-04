@@ -17,14 +17,14 @@ export const Dialog = ({
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed inset-0 bg-black opacity-30 dark:opacity-50" />
+        <RadixDialog.Overlay className="fixed inset-0 z-20 bg-black opacity-30 dark:opacity-50" />
 
         <RadixDialog.Content
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
           }}
-          className="fixed left-1/2 top-1/2 flex w-5/6 max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-lg bg-white px-12 py-8 shadow-2xl dark:bg-zinc-900"
+          className="fixed left-1/2 top-1/2 z-30 flex w-5/6 max-w-xl -translate-x-1/2 -translate-y-1/2 flex-col gap-4 rounded-lg bg-white px-12 py-8 shadow-2xl dark:bg-zinc-900"
         >
           <RadixDialog.Title className="text-2xl">{title}</RadixDialog.Title>
 
