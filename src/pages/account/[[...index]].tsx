@@ -1,5 +1,4 @@
-import { UserProfile } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { UserProfile, useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "~/components/Button";
@@ -7,11 +6,11 @@ import { Dialog } from "~/components/Dialog";
 import { LoadingSpinner } from "~/components/LoadingSpinner";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
-import { ACCOUNT_ROUTE, SIGN_UP_ROUTE } from "~/utils/routing";
+import { ACCOUNT_ROUTE } from "~/utils/routing";
 
 const DeleteAccountButton = () => {
   const [open, setOpen] = useState(false);
-  const router = useRouter();
+  const clerk = useClerk();
 
   const { mutate: deleteMe, isLoading: isDeletingMe } =
     api.users.deleteMe.useMutation({
@@ -19,7 +18,7 @@ const DeleteAccountButton = () => {
         switch (type) {
           case "SUCCESS": {
             setOpen(false);
-            await router.push(SIGN_UP_ROUTE);
+            await clerk.signOut();
             toast.success("Successfully deleted your account");
             return;
           }
