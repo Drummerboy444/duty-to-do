@@ -1,6 +1,13 @@
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, UserButton, useUser } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { HomeIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import {
+  HomeIcon,
+  LaptopIcon,
+  LockClosedIcon,
+  LockOpen1Icon,
+  MoonIcon,
+  SunIcon,
+} from "@radix-ui/react-icons";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
@@ -12,13 +19,16 @@ import { useMounted } from "~/hooks/use-mounted";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
+import { isAdmin } from "~/utils/is-admin";
 import {
   ACCOUNT_ROUTE,
+  ADMIN_ROUTE,
   HOME_ROUTE,
   SIGN_IN_ROUTE,
   getActivityCollectionEditRoute,
   getActivityCollectionRoute,
   isAccountRoute,
+  isAdminRoute,
   isEditRoute,
   isSignInRoute,
   isSignUpRoute,
@@ -81,6 +91,23 @@ const BreadCrumbs = () => {
   );
 };
 
+const AdminButton = () => {
+  const { user, isLoaded: userIsLoaded } = useUser();
+  const { route } = useRouter();
+
+  if (!userIsLoaded) return undefined;
+
+  if (user === null) return undefined;
+
+  if (!isAdmin(user.publicMetadata)) return undefined;
+
+  return (
+    <Link href={ADMIN_ROUTE}>
+      {isAdminRoute(route) ? <LockOpen1Icon /> : <LockClosedIcon />}
+    </Link>
+  );
+};
+
 const Header = () => {
   const mounted = useMounted();
   const { theme, setTheme } = useTheme();
@@ -90,6 +117,8 @@ const Header = () => {
       <BreadCrumbs />
 
       <div className="grow" />
+
+      <AdminButton />
 
       {mounted && (
         <>
