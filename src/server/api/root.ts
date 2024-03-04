@@ -3,6 +3,7 @@ import { activitiesRouter } from "./routers/activities-router";
 import { activityCollectionsRouter } from "./routers/activity-collections-router";
 import { tagsRouter } from "./routers/tags-router";
 import { adminRouter } from "./routers/admin-router";
+import { usersRouter } from "./routers/users-router";
 
 /**
  * This is the primary router for your server.
@@ -11,6 +12,7 @@ import { adminRouter } from "./routers/admin-router";
  */
 export const appRouter = createTRPCRouter({
   admin: adminRouter,
+  users: usersRouter,
   activityCollections: activityCollectionsRouter,
   activities: activitiesRouter,
   tags: tagsRouter,
