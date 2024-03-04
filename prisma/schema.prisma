@@ -21,6 +21,8 @@ model ActivityCollection {
   tags Tag[]
 
   @@unique([name, ownerId])
+
+  @@index([ownerId])
 }
 
 model Activity {
