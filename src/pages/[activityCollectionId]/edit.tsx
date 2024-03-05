@@ -6,6 +6,7 @@ import { api } from "~/utils/api";
 import * as Tabs from "@radix-ui/react-tabs";
 import { type ReactNode } from "react";
 import { Separator } from "~/components/Separator";
+import { PageHeader } from "~/components/PageHeader";
 
 const EditPageTabs = ({
   tabs,
@@ -82,8 +83,7 @@ export default function EditActivityCollectionPage() {
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
-          <h1 className="text-4xl">{name}</h1>
-          <p>{description}</p>
+          <PageHeader header={name} subheader={description} />
           <EditPageTabs
             tabs={[
               {

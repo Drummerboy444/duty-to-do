@@ -6,6 +6,7 @@ import { DeleteActivityCollectionButton } from "~/components/ActivityCollectionF
 import { EditActivityCollectionButton } from "~/components/ActivityCollectionForm/EditActivityCollectionButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
+import { PageHeader } from "~/components/PageHeader";
 import { api } from "~/utils/api";
 import { getActivityCollectionRoute } from "~/utils/routing";
 
@@ -101,7 +102,7 @@ export default function HomePage() {
 
   return (
     <main className="flex flex-col gap-8 px-8 py-12 sm:px-16 lg:px-24">
-      <h1 className="text-4xl">Duty to do</h1>
+      <PageHeader header="Duty to do" />
       <div>
         <CreateActivityCollectionButton
           refetch={async () => {

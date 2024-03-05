@@ -2,6 +2,7 @@ import { Pencil1Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
+import { PageHeader } from "~/components/PageHeader";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
@@ -48,8 +49,7 @@ export default function ActivityCollectionPage() {
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
-          <h1 className="text-4xl">{name}</h1>
-          <p>{description}</p>
+          <PageHeader header={name} subheader={description} />
           <Link href={getActivityCollectionEditRoute(id)}>
             <Pencil1Icon />
           </Link>
