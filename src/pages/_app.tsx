@@ -123,30 +123,33 @@ const Header = () => {
       {mounted && (
         <>
           {theme === "light" && (
-            <SunIcon
-              className="hover:cursor-pointer"
+            <button
               onClick={() => {
                 setTheme("dark");
               }}
-            />
+            >
+              <SunIcon className="hover:cursor-pointer" />
+            </button>
           )}
 
           {theme === "dark" && (
-            <MoonIcon
-              className="hover:cursor-pointer"
+            <button
               onClick={() => {
                 setTheme("system");
               }}
-            />
+            >
+              <MoonIcon className="hover:cursor-pointer" />
+            </button>
           )}
 
           {theme === "system" && (
-            <LaptopIcon
-              className="hover:cursor-pointer"
+            <button
               onClick={() => {
                 setTheme("light");
               }}
-            />
+            >
+              <LaptopIcon className="hover:cursor-pointer" />
+            </button>
           )}
         </>
       )}
