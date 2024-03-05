@@ -3,6 +3,43 @@ import { LoadingPage } from "~/components/LoadingPage";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
+import * as Tabs from "@radix-ui/react-tabs";
+import { type ReactNode } from "react";
+import { Separator } from "~/components/Separator";
+
+const EditPageTabs = ({
+  tabs,
+}: {
+  tabs: { id: string; displayName: string; content: ReactNode }[];
+}) => {
+  const firstTab = tabs[0];
+
+  if (firstTab === undefined) return undefined;
+
+  return (
+    <Tabs.Root defaultValue={firstTab.id} className="flex flex-col gap-2">
+      <Tabs.List className="flex justify-around">
+        {tabs.map(({ id, displayName }) => (
+          <Tabs.Trigger
+            key={id}
+            value={id}
+            className="border-b-2 border-b-transparent px-8 py-2 data-[state=active]:border-b-sky-500"
+          >
+            {displayName}
+          </Tabs.Trigger>
+        ))}
+      </Tabs.List>
+
+      <Separator />
+
+      {tabs.map(({ id, content }) => (
+        <Tabs.Content key={id} value={id}>
+          {content}
+        </Tabs.Content>
+      ))}
+    </Tabs.Root>
+  );
+};
 
 export default function EditActivityCollectionPage() {
   const queryParams = useSafeActivityCollectionQueryParams();
@@ -40,13 +77,29 @@ export default function EditActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { name },
+        activityCollection: { name, description },
       } = activityCollectionData;
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
-          <h1 className="text-4xl">{name} edit page</h1>
-          <p>This is where you can edit things...</p>
+          <h1 className="text-4xl">{name}</h1>
+          <p>{description}</p>
+          <EditPageTabs
+            tabs={[
+              {
+                id: "activities",
+                displayName: "Activities",
+                content: (
+                  <p>This is where you will be able to edit activities...</p>
+                ),
+              },
+              {
+                id: "tags",
+                displayName: "Tags",
+                content: <p>This is where you will be able to edit tags...</p>,
+              },
+            ]}
+          />
         </main>
       );
     }
