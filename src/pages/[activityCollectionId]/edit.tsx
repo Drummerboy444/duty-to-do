@@ -7,6 +7,34 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { type ReactNode } from "react";
 import { Separator } from "~/components/Separator";
 import { PageHeader } from "~/components/PageHeader";
+import { Button } from "~/components/Button";
+import { IconButton } from "~/components/IconButton";
+import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+
+const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
+  return (
+    <div className="flex gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
+      <p>{tag.name}</p>
+      <div className="grow" />
+      <IconButton icon={<TrashIcon />} warn />
+      <IconButton icon={<Pencil1Icon />} />
+    </div>
+  );
+};
+
+const TagsEditor = ({ tags }: { tags: { id: string; name: string }[] }) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <Button label="Create Tag" />
+      </div>
+
+      {tags.map((tag) => (
+        <TagsEditorRow key={tag.id} tag={tag} />
+      ))}
+    </div>
+  );
+};
 
 const EditPageTabs = ({
   tabs,
@@ -34,7 +62,7 @@ const EditPageTabs = ({
       <Separator />
 
       {tabs.map(({ id, content }) => (
-        <Tabs.Content key={id} value={id}>
+        <Tabs.Content key={id} value={id} className="px-4 py-2">
           {content}
         </Tabs.Content>
       ))}
@@ -78,7 +106,7 @@ export default function EditActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { name, description },
+        activityCollection: { name, description, tags },
       } = activityCollectionData;
 
       return (
@@ -96,7 +124,7 @@ export default function EditActivityCollectionPage() {
               {
                 id: "tags",
                 displayName: "Tags",
-                content: <p>This is where you will be able to edit tags...</p>,
+                content: <TagsEditor tags={tags} />,
               },
             ]}
           />
