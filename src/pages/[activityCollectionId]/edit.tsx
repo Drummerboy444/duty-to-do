@@ -8,11 +8,18 @@ import { type ReactNode } from "react";
 import { Separator } from "~/components/Separator";
 import { PageHeader } from "~/components/PageHeader";
 import { IconButton } from "~/components/IconButton";
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
 import { getTagColour } from "~/utils/string-to-colour";
+import { EditTagButton } from "~/components/TagForm/EditTagButton";
 
-const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
+const TagsEditorRow = ({
+  tag,
+  refetch,
+}: {
+  tag: { id: string; name: string };
+  refetch: () => Promise<void>;
+}) => {
   return (
     <div className="flex gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
       <p
@@ -25,7 +32,7 @@ const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
       </p>
       <div className="grow" />
       <IconButton icon={<TrashIcon />} warn />
-      <IconButton icon={<Pencil1Icon />} />
+      <EditTagButton tagId={tag.id} defaultValues={tag} refetch={refetch} />
     </div>
   );
 };
@@ -49,7 +56,7 @@ const TagsEditor = ({
       </div>
 
       {tags.map((tag) => (
-        <TagsEditorRow key={tag.id} tag={tag} />
+        <TagsEditorRow key={tag.id} tag={tag} refetch={refetch} />
       ))}
     </div>
   );

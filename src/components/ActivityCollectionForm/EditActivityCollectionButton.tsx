@@ -85,7 +85,7 @@ export const EditActivityCollectionButton = ({
     },
     onError: () => {
       setErrorMessage(
-        "Something went wrote while editing you activity collection, please try again later",
+        "Something went wrote while editing your activity collection, please try again later",
       );
     },
   });
