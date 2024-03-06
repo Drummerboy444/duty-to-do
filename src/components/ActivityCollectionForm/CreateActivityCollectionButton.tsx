@@ -40,7 +40,7 @@ export const CreateActivityCollectionButton = ({
           await refetch();
           setOpen(false);
           clearState();
-          toast.success("Successfully create activity collection");
+          toast.success("Successfully created activity collection");
           return;
         }
 
@@ -68,7 +68,7 @@ export const CreateActivityCollectionButton = ({
     },
     onError: () => {
       setErrorMessage(
-        "Something went wrote while creating you activity collection, please try again later",
+        "Something went wrote while creating your activity collection, please try again later",
       );
     },
   });

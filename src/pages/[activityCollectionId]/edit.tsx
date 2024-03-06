@@ -7,9 +7,9 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { type ReactNode } from "react";
 import { Separator } from "~/components/Separator";
 import { PageHeader } from "~/components/PageHeader";
-import { Button } from "~/components/Button";
 import { IconButton } from "~/components/IconButton";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
+import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
 
 const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
   return (
@@ -22,11 +22,22 @@ const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
   );
 };
 
-const TagsEditor = ({ tags }: { tags: { id: string; name: string }[] }) => {
+const TagsEditor = ({
+  tags,
+  activityCollectionId,
+  refetch,
+}: {
+  tags: { id: string; name: string }[];
+  activityCollectionId: string;
+  refetch: () => Promise<void>;
+}) => {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <Button label="Create Tag" />
+        <CreateTagButton
+          activityCollectionId={activityCollectionId}
+          refetch={refetch}
+        />
       </div>
 
       {tags.map((tag) => (
@@ -76,6 +87,7 @@ export default function EditActivityCollectionPage() {
   const {
     data: activityCollectionData,
     isLoading: isLoadingActivityCollection,
+    refetch: refetchActivityCollection,
   } = api.activityCollections.get.useQuery(
     queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"
       ? { id: queryParams.activityCollectionId }
@@ -106,8 +118,12 @@ export default function EditActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { name, description, tags },
+        activityCollection: { id, name, description, tags },
       } = activityCollectionData;
+
+      const refetch = async () => {
+        await refetchActivityCollection();
+      };
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
@@ -124,7 +140,13 @@ export default function EditActivityCollectionPage() {
               {
                 id: "tags",
                 displayName: "Tags",
-                content: <TagsEditor tags={tags} />,
+                content: (
+                  <TagsEditor
+                    tags={tags}
+                    activityCollectionId={id}
+                    refetch={refetch}
+                  />
+                ),
               },
             ]}
           />
