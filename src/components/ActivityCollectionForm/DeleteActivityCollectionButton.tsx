@@ -28,7 +28,7 @@ export const DeleteActivityCollectionButton = ({
         case "SUCCESS": {
           await refetch();
           setOpen(false);
-          toast.success("Successfully delete activity collection");
+          toast.success("Successfully deleted activity collection");
           return;
         }
 
@@ -79,7 +79,10 @@ export const DeleteActivityCollectionButton = ({
         }}
         content={
           <div className="flex flex-col gap-4">
-            <p>This action cannot be undone.</p>
+            <p>
+              Are you sure you want to delete this activity collection? This
+              action cannot be undone.
+            </p>
 
             {errorMessage !== undefined && (
               <ErrorCallout message={errorMessage} />

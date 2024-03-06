@@ -1,17 +1,16 @@
+import * as Tabs from "@radix-ui/react-tabs";
+import { type ReactNode } from "react";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
+import { PageHeader } from "~/components/PageHeader";
+import { Separator } from "~/components/Separator";
+import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
+import { DeleteTagButton } from "~/components/TagForm/DeleteTagButton";
+import { EditTagButton } from "~/components/TagForm/EditTagButton";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
-import * as Tabs from "@radix-ui/react-tabs";
-import { type ReactNode } from "react";
-import { Separator } from "~/components/Separator";
-import { PageHeader } from "~/components/PageHeader";
-import { IconButton } from "~/components/IconButton";
-import { TrashIcon } from "@radix-ui/react-icons";
-import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
 import { getTagColour } from "~/utils/string-to-colour";
-import { EditTagButton } from "~/components/TagForm/EditTagButton";
 
 const TagsEditorRow = ({
   tag,
@@ -31,7 +30,7 @@ const TagsEditorRow = ({
         {tag.name}
       </p>
       <div className="grow" />
-      <IconButton icon={<TrashIcon />} warn />
+      <DeleteTagButton tagId={tag.id} refetch={refetch} />
       <EditTagButton tagId={tag.id} defaultValues={tag} refetch={refetch} />
     </div>
   );
