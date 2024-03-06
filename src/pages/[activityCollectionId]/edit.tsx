@@ -20,7 +20,7 @@ const TagsEditorRow = ({
   refetch: () => Promise<void>;
 }) => {
   return (
-    <div className="flex gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
+    <div className="flex items-start gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
       <p
         style={{
           backgroundColor: getTagColour(tag.id),
