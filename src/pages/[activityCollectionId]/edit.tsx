@@ -10,11 +10,19 @@ import { PageHeader } from "~/components/PageHeader";
 import { IconButton } from "~/components/IconButton";
 import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
 import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
+import { getTagColour } from "~/utils/string-to-colour";
 
 const TagsEditorRow = ({ tag }: { tag: { id: string; name: string } }) => {
   return (
     <div className="flex gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
-      <p>{tag.name}</p>
+      <p
+        style={{
+          backgroundColor: getTagColour(tag.id),
+        }}
+        className="rounded-full px-4 text-black"
+      >
+        {tag.name}
+      </p>
       <div className="grow" />
       <IconButton icon={<TrashIcon />} warn />
       <IconButton icon={<Pencil1Icon />} />
