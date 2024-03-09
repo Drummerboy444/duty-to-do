@@ -9,12 +9,13 @@ export const activitiesRouter = createTRPCRouter({
       z.object({
         activityCollectionId: z.string(),
         name: z.string(),
+        tagIds: z.string().array(),
       }),
     )
     .mutation(
       async ({
         ctx: { db, userId },
-        input: { activityCollectionId, name },
+        input: { activityCollectionId, name, tagIds },
       }) => {
         const preprocessedName = name.trim();
         if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
@@ -31,6 +32,20 @@ export const activitiesRouter = createTRPCRouter({
 
         if (!canCreateActivity) return ACCESS_DENIED;
 
+        const tags = await db.tag.findMany({
+          where: { id: { in: tagIds } },
+        });
+
+        if (tags.length !== tagIds.length)
+          return { type: "INVALID_TAG_IDS" as const };
+
+        if (
+          !tags.every(
+            (tag) => tag.activityCollectionId === activityCollection.id,
+          )
+        )
+          return { type: "INVALID_TAG_IDS" as const };
+
         try {
           return {
             ...SUCCESS,
@@ -38,6 +53,7 @@ export const activitiesRouter = createTRPCRouter({
               data: {
                 activityCollectionId,
                 name: preprocessedName,
+                tags: { connect: tagIds.map((id) => ({ id })) },
               },
             }),
           };
@@ -55,11 +71,14 @@ export const activitiesRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        name: z.string().optional(),
-        tagIds: z.string().array().optional(),
+        name: z.string(),
+        tagIds: z.string().array(),
       }),
     )
     .mutation(async ({ ctx: { db, userId }, input: { id, name, tagIds } }) => {
+      const preprocessedName = name.trim();
+      if (preprocessedName === "") return { type: "EMPTY_NAME" as const };
+
       const activity = await db.activity.findUnique({
         where: { id },
         include: { activityCollection: true },
@@ -71,24 +90,19 @@ export const activitiesRouter = createTRPCRouter({
 
       if (!canEditActivity) return ACCESS_DENIED;
 
-      if (name !== undefined && name.trim() === "")
-        return { type: "EMPTY_NAME" as const };
+      const tags = await db.tag.findMany({
+        where: { id: { in: tagIds } },
+      });
 
-      if (tagIds !== undefined) {
-        const tags = await db.tag.findMany({
-          where: { id: { in: tagIds } },
-        });
+      if (tags.length !== tagIds.length)
+        return { type: "INVALID_TAG_IDS" as const };
 
-        if (tags.length !== tagIds.length)
-          return { type: "INVALID_TAG_IDS" as const };
-
-        if (
-          !tags.every(
-            (tag) => tag.activityCollectionId === activity.activityCollectionId,
-          )
+      if (
+        !tags.every(
+          (tag) => tag.activityCollectionId === activity.activityCollectionId,
         )
-          return { type: "INVALID_TAG_IDS" as const };
-      }
+      )
+        return { type: "INVALID_TAG_IDS" as const };
 
       try {
         return {
@@ -96,10 +110,8 @@ export const activitiesRouter = createTRPCRouter({
           activity: await db.activity.update({
             where: { id },
             data: {
-              ...(name === undefined ? {} : { name: name.trim() }),
-              ...(tagIds === undefined
-                ? {}
-                : { set: tagIds.map((id) => ({ id })) }),
+              name: preprocessedName,
+              tags: { set: tagIds.map((id) => ({ id })) },
             },
           }),
         };
