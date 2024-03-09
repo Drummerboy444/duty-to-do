@@ -142,4 +142,69 @@ export const activityCollectionsRouter = createTRPCRouter({
         }),
       };
     }),
+
+  share: privateProcedure
+    .input(
+      z.object({
+        activityCollectionId: z.string(),
+        shareWithUserId: z.string(),
+      }),
+    )
+    .mutation(
+      async ({
+        ctx: { db, userId },
+        input: { activityCollectionId, shareWithUserId },
+      }) => {
+        const activityCollection = await db.activityCollection.findUnique({
+          where: { id: activityCollectionId },
+        });
+
+        if (activityCollection === null)
+          return { type: "NO_ACTIVITY_COLLECTION_FOUND" as const };
+
+        const canShareActivityCollection =
+          activityCollection.ownerId === userId;
+
+        if (!canShareActivityCollection) return ACCESS_DENIED;
+
+        try {
+          return {
+            ...SUCCESS,
+            sharedWith: await db.sharedWith.create({
+              data: {
+                activityCollectionId: activityCollectionId,
+                userId: shareWithUserId,
+              },
+            }),
+          };
+        } catch (error) {
+          if (isUniqueConstraintViolation(error)) {
+            return { type: "ALREADY_SHARED" as const };
+          }
+
+          throw error;
+        }
+      },
+    ),
+
+  unshare: privateProcedure
+    .input(z.object({ sharedWithId: z.string() }))
+    .mutation(async ({ ctx: { db, userId }, input: { sharedWithId } }) => {
+      const sharedWith = await db.sharedWith.findUnique({
+        where: { id: sharedWithId },
+        include: { activityCollection: true },
+      });
+
+      if (sharedWith === null) return { type: "NO_SHARE_WITH_FOUND" as const };
+
+      const canUnshareActivityCollection =
+        sharedWith.activityCollection.ownerId === userId;
+
+      if (!canUnshareActivityCollection) return ACCESS_DENIED;
+
+      return {
+        ...SUCCESS,
+        shareWith: await db.sharedWith.delete({ where: { id: sharedWithId } }),
+      };
+    }),
 });
