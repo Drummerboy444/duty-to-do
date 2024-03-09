@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-const getSafeQueryParamsHook =
+export const getSafeQueryParamsHook =
   <RequiredKeys extends string, OptionalKeys extends string>(
     requiredKeys: RequiredKeys[],
     optionalKeys: OptionalKeys[] = [],
@@ -26,7 +26,7 @@ const getSafeQueryParamsHook =
         ...previousLookup,
         [key]: query[key],
       }),
-      {} as Record<RequiredKeys, string | undefined>,
+      {} as Record<OptionalKeys, string | undefined>,
     );
 
     return { requiredKeysLookup, optionalKeysLookup };
@@ -35,3 +35,8 @@ const getSafeQueryParamsHook =
 export const useSafeActivityCollectionQueryParams = getSafeQueryParamsHook([
   "activityCollectionId",
 ]);
+
+export const useSafeEditActivityCollectionQueryParams = getSafeQueryParamsHook(
+  ["activityCollectionId"],
+  ["tab"],
+);

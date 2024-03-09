@@ -1,5 +1,6 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { type ReactNode } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState, type ReactNode } from "react";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
@@ -7,7 +8,7 @@ import { Separator } from "~/components/Separator";
 import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
 import { DeleteTagButton } from "~/components/TagForm/DeleteTagButton";
 import { EditTagButton } from "~/components/TagForm/EditTagButton";
-import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
+import { useSafeEditActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
 import { getTagColour } from "~/utils/string-to-colour";
@@ -63,15 +64,27 @@ const TagsEditor = ({
 
 const EditPageTabs = ({
   tabs,
+  defaultTab,
 }: {
   tabs: { id: string; displayName: string; content: ReactNode }[];
+  defaultTab: string;
 }) => {
-  const firstTab = tabs[0];
+  const [tab, setTab] = useState(defaultTab);
+  const router = useRouter();
 
-  if (firstTab === undefined) return undefined;
+  useEffect(() => {
+    void router.replace({ query: { ...router.query, tab } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab]);
 
   return (
-    <Tabs.Root defaultValue={firstTab.id} className="flex flex-col gap-2">
+    <Tabs.Root
+      value={tab}
+      onValueChange={(value) => {
+        setTab(value);
+      }}
+      className="flex flex-col gap-2"
+    >
       <Tabs.List className="flex justify-around">
         {tabs.map(({ id, displayName }) => (
           <Tabs.Trigger
@@ -96,7 +109,7 @@ const EditPageTabs = ({
 };
 
 export default function EditActivityCollectionPage() {
-  const queryParams = useSafeActivityCollectionQueryParams();
+  const queryParams = useSafeEditActivityCollectionQueryParams();
 
   const {
     data: activityCollectionData,
@@ -112,9 +125,13 @@ export default function EditActivityCollectionPage() {
     },
   );
 
-  if (isLoadingActivityCollection) return <LoadingPage />;
+  if (isLoadingActivityCollection || queryParams === "LOADING")
+    return <LoadingPage />;
 
-  if (activityCollectionData === undefined)
+  if (
+    activityCollectionData === undefined ||
+    queryParams === "QUERY_PARAMS_UNAVAILABLE"
+  )
     return (
       <ErrorPage message="We couldn't find this activity collection, please try again later" />
     );
@@ -143,6 +160,11 @@ export default function EditActivityCollectionPage() {
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
           <PageHeader header={name} subheader={description} />
           <EditPageTabs
+            defaultTab={
+              queryParams.optionalKeysLookup.tab === undefined
+                ? "activities"
+                : queryParams.optionalKeysLookup.tab
+            }
             tabs={[
               {
                 id: "activities",
