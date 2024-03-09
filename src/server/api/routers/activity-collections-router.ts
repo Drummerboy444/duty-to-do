@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { ACCESS_DENIED, SUCCESS } from "../utils/generic-responses";
 import { isUniqueConstraintViolation } from "../utils/db-violations";
-import { appendPublicUsers, safeGetUser } from "../utils/users";
+import { appendPublicUsers, safeGetUserByUsername } from "../utils/users";
 
 export const activityCollectionsRouter = createTRPCRouter({
   get: privateProcedure
@@ -161,13 +161,13 @@ export const activityCollectionsRouter = createTRPCRouter({
     .input(
       z.object({
         activityCollectionId: z.string(),
-        shareWithUserId: z.string(),
+        username: z.string(),
       }),
     )
     .mutation(
       async ({
         ctx: { db, userId },
-        input: { activityCollectionId, shareWithUserId },
+        input: { activityCollectionId, username },
       }) => {
         const activityCollection = await db.activityCollection.findUnique({
           where: { id: activityCollectionId },
@@ -181,9 +181,9 @@ export const activityCollectionsRouter = createTRPCRouter({
 
         if (!canShareActivityCollection) return ACCESS_DENIED;
 
-        const user = await safeGetUser(shareWithUserId);
+        const user = await safeGetUserByUsername(username);
 
-        if (user === "UNKNOWN_USER") return { type: "UNKNOWN_USER" as const };
+        if (user === "NO_USER_FOUND") return { type: "NO_USER_FOUND" as const };
 
         try {
           return {
@@ -191,7 +191,7 @@ export const activityCollectionsRouter = createTRPCRouter({
             sharedWith: await db.sharedWith.create({
               data: {
                 activityCollectionId: activityCollectionId,
-                userId: shareWithUserId,
+                userId: user.id,
               },
             }),
           };
