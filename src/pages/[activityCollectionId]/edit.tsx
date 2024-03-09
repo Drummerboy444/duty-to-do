@@ -2,6 +2,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactNode } from "react";
 import { CreateActivityButton } from "~/components/ActivityForm/CreateActivityButton";
+import { DeleteActivityButton } from "~/components/ActivityForm/DeleteActivityButton";
 import { EditActivityButton } from "~/components/ActivityForm/EditActivityButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
@@ -42,6 +43,7 @@ const ActivitiesEditorRow = ({
         allTags={allTags}
         refetch={refetch}
       />
+      <DeleteActivityButton activityId={activity.id} refetch={refetch} />
     </div>
   );
 };
