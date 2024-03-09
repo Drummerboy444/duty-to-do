@@ -46,7 +46,7 @@ const BreadCrumbs = () => {
 
   const { data } = api.activityCollections.get.useQuery(
     queryParams !== "LOADING" && queryParams !== "QUERY_PARAMS_UNAVAILABLE"
-      ? { id: queryParams.activityCollectionId }
+      ? { id: queryParams.requiredKeysLookup.activityCollectionId }
       : { id: "" },
     {
       enabled:
