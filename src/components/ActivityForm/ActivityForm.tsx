@@ -1,3 +1,4 @@
+import { getTagColour } from "~/utils/string-to-colour";
 import { Checkbox } from "../Checkbox";
 import { TextInput } from "../TextInput";
 
@@ -25,23 +26,31 @@ export const ActivityForm = ({
         label="Name"
       />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4">
         {allTags.map((tag) => (
-          <Checkbox
-            key={tag.id}
-            checked={formState.tagIds.includes(tag.id)}
-            setChecked={(checked) => {
-              onFormStateChange({
-                tagIds: allTags
-                  .filter((otherTag) => {
-                    if (otherTag.id === tag.id) return checked;
-                    return formState.tagIds.includes(otherTag.id);
-                  })
-                  .map(({ id }) => id),
-              });
-            }}
-            label={tag.name}
-          />
+          <div key={tag.id} className="flex items-center gap-2">
+            <Checkbox
+              checked={formState.tagIds.includes(tag.id)}
+              setChecked={(checked) => {
+                onFormStateChange({
+                  tagIds: allTags
+                    .filter((otherTag) => {
+                      if (otherTag.id === tag.id) return checked;
+                      return formState.tagIds.includes(otherTag.id);
+                    })
+                    .map(({ id }) => id),
+                });
+              }}
+            />
+            <p
+              style={{
+                backgroundColor: getTagColour(tag.id),
+              }}
+              className="rounded-full px-4 text-black"
+            >
+              {tag.name}
+            </p>
+          </div>
         ))}
       </div>
     </>
