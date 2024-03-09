@@ -36,6 +36,7 @@ const ActivitiesEditorRow = ({
 
 const ActivitiesEditor = ({
   activities,
+  allTags,
   activityCollectionId,
   refetch,
 }: {
@@ -44,6 +45,7 @@ const ActivitiesEditor = ({
     name: string;
     tags: { id: string; name: string }[];
   }[];
+  allTags: { id: string; name: string }[];
   activityCollectionId: string;
   refetch: () => Promise<void>;
 }) => {
@@ -52,6 +54,7 @@ const ActivitiesEditor = ({
       <div>
         <CreateActivityButton
           activityCollectionId={activityCollectionId}
+          allTags={allTags}
           refetch={refetch}
         />
       </div>
@@ -228,6 +231,7 @@ export default function EditActivityCollectionPage() {
                 content: (
                   <ActivitiesEditor
                     activities={activities}
+                    allTags={tags}
                     activityCollectionId={id}
                     refetch={refetch}
                   />
