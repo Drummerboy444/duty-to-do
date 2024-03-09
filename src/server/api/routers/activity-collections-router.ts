@@ -47,7 +47,9 @@ export const activityCollectionsRouter = createTRPCRouter({
   getAll: privateProcedure.query(async ({ ctx: { db, userId } }) => {
     return {
       activityCollections: await db.activityCollection.findMany({
-        where: { ownerId: userId },
+        where: {
+          OR: [{ ownerId: userId }, { sharedWith: { some: { userId } } }],
+        },
         orderBy: { createdAt: "desc" },
       }),
     };
