@@ -124,7 +124,7 @@ export default function ActivityCollectionPage() {
             allTags={activityCollectionData.activityCollection.tags}
           />
 
-          {filteredActivities.length > 0 ? (
+          {filteredActivities.length > 0 && (
             <>
               {filteredActivities.map((filteredActivity) => (
                 <ActivityRow
@@ -134,7 +134,9 @@ export default function ActivityCollectionPage() {
                 />
               ))}
             </>
-          ) : (
+          )}
+
+          {activities.length > 0 && filteredActivities.length === 0 && (
             <p className="italic text-gray-500">
               No activities found that match these tags
             </p>
