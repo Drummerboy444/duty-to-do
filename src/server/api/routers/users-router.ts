@@ -8,6 +8,7 @@ export const usersRouter = createTRPCRouter({
     try {
       await db.$transaction(async (tx) => {
         await tx.activityCollection.deleteMany({ where: { ownerId: userId } });
+        await tx.sharedWith.deleteMany({ where: { userId } });
         await clerkClient.users.deleteUser(userId);
       });
 
