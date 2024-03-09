@@ -17,12 +17,28 @@ model ActivityCollection {
 
   name String
   description String
+  sharedWith SharedWith[]
   activities Activity[]
   tags Tag[]
 
   @@unique([name, ownerId])
 
   @@index([ownerId])
+}
+
+model SharedWith {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activityCollectionId String
+  activityCollection ActivityCollection @relation(fields: [activityCollectionId], references: [id], onDelete: Cascade)
+
+  userId String
+
+  @@unique([userId, activityCollectionId])
+
+  @@index([activityCollectionId])
 }
 
 model Activity {
