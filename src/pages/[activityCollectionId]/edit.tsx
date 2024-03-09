@@ -34,6 +34,7 @@ const ActivitiesEditorRow = ({
       <div className="flex items-start gap-2">
         <p>{activity.name}</p>
         <div className="grow" />
+        <DeleteActivityButton activityId={activity.id} refetch={refetch} />
         <EditActivityButton
           activityId={activity.id}
           defaultValues={{
@@ -43,7 +44,6 @@ const ActivitiesEditorRow = ({
           allTags={allTags}
           refetch={refetch}
         />
-        <DeleteActivityButton activityId={activity.id} refetch={refetch} />
       </div>
 
       <div className="flex flex-wrap gap-2">
