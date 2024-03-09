@@ -161,9 +161,11 @@ export default function EditActivityCollectionPage() {
           <PageHeader header={name} subheader={description} />
           <EditPageTabs
             defaultTab={
-              queryParams.optionalKeysLookup.tab === undefined
-                ? "activities"
-                : queryParams.optionalKeysLookup.tab
+              (queryParams.optionalKeysLookup.tab !== undefined &&
+                queryParams.optionalKeysLookup.tab === "activities") ||
+              queryParams.optionalKeysLookup.tab === "tags"
+                ? queryParams.optionalKeysLookup.tab
+                : "activities"
             }
             tabs={[
               {
