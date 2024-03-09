@@ -171,6 +171,7 @@ export default function EditActivityCollectionPage() {
                         <SharingTab
                           activityCollectionId={id}
                           sharedWith={sharedWith}
+                          refetch={refetch}
                         />
                       ),
                     },

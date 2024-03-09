@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ShareActivityCollectionButton } from "./ShareActivityCollectionButton";
 
 const SharingRow = ({
   activityCollectionId,
@@ -39,6 +40,7 @@ const SharingRow = ({
 export const SharingTab = ({
   activityCollectionId,
   sharedWith,
+  refetch,
 }: {
   activityCollectionId: string;
   sharedWith: {
@@ -51,9 +53,17 @@ export const SharingTab = ({
         }
       | "UNKNOWN_USER";
   }[];
+  refetch: () => Promise<void>;
 }) => {
   return (
     <div className="flex flex-col gap-4">
+      <div>
+        <ShareActivityCollectionButton
+          activityCollectionId={activityCollectionId}
+          refetch={refetch}
+        />
+      </div>
+
       {sharedWith.map(({ id, user }) => (
         <SharingRow
           key={id}
