@@ -22,3 +22,19 @@ export const IconButton = ({
     </button>
   );
 };
+
+export const FlatIconButton = ({
+  icon,
+  onClick = noOp,
+}: {
+  icon: ReactNode;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  warn?: boolean;
+  disabled?: boolean;
+}) => {
+  return (
+    <button onClick={onClick} className="rounded p-1.5 text-sky-500">
+      {icon}
+    </button>
+  );
+};
