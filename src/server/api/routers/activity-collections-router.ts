@@ -35,7 +35,7 @@ export const activityCollectionsRouter = createTRPCRouter({
           sharedWith:
             activityCollection.ownerId === userId
               ? await appendPublicUsers(activityCollection.sharedWith)
-              : "ACCESS_DENIED",
+              : ACCESS_DENIED.type,
         },
       };
     }),
