@@ -49,10 +49,13 @@ export default function ActivityCollectionPage() {
 
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
-          <PageHeader header={name} subheader={description} />
-          <Link href={getActivityCollectionEditRoute(id)}>
-            <Pencil1Icon />
-          </Link>
+          <div className="flex justify-between gap-2">
+            <PageHeader header={name} subheader={description} />
+            <Link className="pt-2" href={getActivityCollectionEditRoute(id)}>
+              <Pencil1Icon />
+            </Link>
+          </div>
+
           {activities.length > 0 ? (
             <div>
               {activities.map((activity) => (
