@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/nextjs";
 import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactNode } from "react";
@@ -136,6 +137,10 @@ const TagsEditor = ({
   );
 };
 
+const SharingTab = () => {
+  return <div>This is the sharing tab...</div>;
+};
+
 const EditPageTabs = ({
   tabs,
   defaultTab,
@@ -185,6 +190,8 @@ const EditPageTabs = ({
 export default function EditActivityCollectionPage() {
   const queryParams = useSafeEditActivityCollectionQueryParams();
 
+  const { user, isLoaded: userIsLoaded } = useUser();
+
   const {
     data: activityCollectionData,
     isLoading: isLoadingActivityCollection,
@@ -199,7 +206,7 @@ export default function EditActivityCollectionPage() {
     },
   );
 
-  if (isLoadingActivityCollection || queryParams === "LOADING")
+  if (isLoadingActivityCollection || queryParams === "LOADING" || !userIsLoaded)
     return <LoadingPage />;
 
   if (
@@ -209,6 +216,12 @@ export default function EditActivityCollectionPage() {
     return (
       <ErrorPage message="We couldn't find this activity collection, please try again later" />
     );
+
+  if (user === null) {
+    return (
+      <ErrorPage message="We couldn't load your user data, please try again later" />
+    );
+  }
 
   switch (activityCollectionData.type) {
     case "NO_ACTIVITY_COLLECTION_FOUND": {
@@ -223,7 +236,14 @@ export default function EditActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { id, name, description, activities, tags },
+        activityCollection: {
+          id,
+          ownerId,
+          name,
+          description,
+          activities,
+          tags,
+        },
       } = activityCollectionData;
 
       const refetch = async () => {
@@ -265,6 +285,15 @@ export default function EditActivityCollectionPage() {
                   />
                 ),
               },
+              ...(user.id === ownerId
+                ? [
+                    {
+                      id: "sharing",
+                      displayName: "Sharing",
+                      content: <SharingTab />,
+                    },
+                  ]
+                : []),
             ]}
           />
         </main>
