@@ -154,16 +154,11 @@ const Header = () => {
         </>
       )}
 
-      <div className="h-[32px] w-[32px] rounded-full bg-gray-300 dark:bg-gray-700" />
-      <div className="relative h-0 w-0">
-        <div className="absolute -top-[16px] right-[16px]">
-          <UserButton
-            afterSignOutUrl={SIGN_IN_ROUTE}
-            userProfileMode="navigation"
-            userProfileUrl={ACCOUNT_ROUTE}
-          />
-        </div>
-      </div>
+      <UserButton
+        afterSignOutUrl={SIGN_IN_ROUTE}
+        userProfileMode="navigation"
+        userProfileUrl={ACCOUNT_ROUTE}
+      />
     </div>
   );
 };
