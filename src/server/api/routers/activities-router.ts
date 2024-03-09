@@ -22,13 +22,18 @@ export const activitiesRouter = createTRPCRouter({
 
         const activityCollection = await db.activityCollection.findUnique({
           where: { id: activityCollectionId },
+          include: { sharedWith: true },
         });
 
         if (activityCollection === null) {
           return { type: "NO_ACTIVITY_COLLECTION_FOUND" as const };
         }
 
-        const canCreateActivity = activityCollection.ownerId === userId;
+        const canCreateActivity =
+          activityCollection.ownerId === userId ||
+          activityCollection.sharedWith.some(
+            ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+          );
 
         if (!canCreateActivity) return ACCESS_DENIED;
 
@@ -81,12 +86,16 @@ export const activitiesRouter = createTRPCRouter({
 
       const activity = await db.activity.findUnique({
         where: { id },
-        include: { activityCollection: true },
+        include: { activityCollection: { include: { sharedWith: true } } },
       });
 
       if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
 
-      const canEditActivity = activity.activityCollection.ownerId === userId;
+      const canEditActivity =
+        activity.activityCollection.ownerId === userId ||
+        activity.activityCollection.sharedWith.some(
+          ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+        );
 
       if (!canEditActivity) return ACCESS_DENIED;
 
@@ -128,12 +137,16 @@ export const activitiesRouter = createTRPCRouter({
     .mutation(async ({ ctx: { db, userId }, input: { id } }) => {
       const activity = await db.activity.findUnique({
         where: { id },
-        include: { activityCollection: true },
+        include: { activityCollection: { include: { sharedWith: true } } },
       });
 
       if (activity === null) return { type: "NO_ACTIVITY_FOUND" as const };
 
-      const canDeleteActivity = activity.activityCollection.ownerId === userId;
+      const canDeleteActivity =
+        activity.activityCollection.ownerId === userId ||
+        activity.activityCollection.sharedWith.some(
+          ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+        );
 
       if (!canDeleteActivity) return ACCESS_DENIED;
 

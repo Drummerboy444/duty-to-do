@@ -21,6 +21,7 @@ export const tagsRouter = createTRPCRouter({
 
         const activityCollection = await db.activityCollection.findUnique({
           where: { id: activityCollectionId },
+          include: { sharedWith: true },
         });
 
         if (activityCollection === null)
@@ -28,7 +29,11 @@ export const tagsRouter = createTRPCRouter({
             type: "NO_ACTIVITY_COLLECTION_FOUND" as const,
           };
 
-        const canCreateTag = activityCollection.ownerId === userId;
+        const canCreateTag =
+          activityCollection.ownerId === userId ||
+          activityCollection.sharedWith.some(
+            ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+          );
 
         if (!canCreateTag) return ACCESS_DENIED;
 
@@ -60,12 +65,16 @@ export const tagsRouter = createTRPCRouter({
 
       const tag = await db.tag.findUnique({
         where: { id },
-        include: { activityCollection: true },
+        include: { activityCollection: { include: { sharedWith: true } } },
       });
 
       if (tag === null) return { type: "NO_TAG_FOUND" as const };
 
-      const canEditTag = tag.activityCollection.ownerId === userId;
+      const canEditTag =
+        tag.activityCollection.ownerId === userId ||
+        tag.activityCollection.sharedWith.some(
+          ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+        );
 
       if (!canEditTag) return ACCESS_DENIED;
 
@@ -90,12 +99,16 @@ export const tagsRouter = createTRPCRouter({
     .mutation(async ({ ctx: { db, userId }, input: { id } }) => {
       const tag = await db.tag.findUnique({
         where: { id },
-        include: { activityCollection: true },
+        include: { activityCollection: { include: { sharedWith: true } } },
       });
 
       if (tag === null) return { type: "NO_TAG_FOUND" as const };
 
-      const canDeleteTag = tag.activityCollection.ownerId === userId;
+      const canDeleteTag =
+        tag.activityCollection.ownerId === userId ||
+        tag.activityCollection.sharedWith.some(
+          ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+        );
 
       if (!canDeleteTag) return ACCESS_DENIED;
 

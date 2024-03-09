@@ -24,7 +24,11 @@ export const activityCollectionsRouter = createTRPCRouter({
       if (activityCollection === null)
         return { type: "NO_ACTIVITY_COLLECTION_FOUND" as const };
 
-      const canAccessActivityCollection = activityCollection.ownerId === userId;
+      const canAccessActivityCollection =
+        activityCollection.ownerId === userId ||
+        activityCollection.sharedWith.some(
+          ({ userId: sharedWithUserId }) => sharedWithUserId === userId,
+        );
 
       if (!canAccessActivityCollection) return ACCESS_DENIED;
 
