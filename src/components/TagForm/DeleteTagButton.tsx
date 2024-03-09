@@ -63,6 +63,7 @@ export const DeleteTagButton = ({
           setOpen(true);
         }}
       />
+
       <Dialog
         title="Delete tag"
         open={open}
