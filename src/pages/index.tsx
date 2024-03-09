@@ -1,3 +1,4 @@
+import { useUser } from "@clerk/nextjs";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
@@ -7,13 +8,15 @@ import { EditActivityCollectionButton } from "~/components/ActivityCollectionFor
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
+import { SharedWithTag } from "~/components/SharedWithTag";
 import { api } from "~/utils/api";
 import { getActivityCollectionRoute } from "~/utils/routing";
 
 dayjs.extend(relativeTime);
 
 const ActivityCollectionCard = ({
-  activityCollection: { id, name, description, createdAt },
+  activityCollection: { id, name, description, createdAt, ownerId },
+  userId,
   refetch,
 }: {
   activityCollection: {
@@ -21,7 +24,9 @@ const ActivityCollectionCard = ({
     name: string;
     description: string;
     createdAt: Date;
+    ownerId: string;
   };
+  userId: string;
   refetch: () => Promise<void>;
 }) => {
   return (
@@ -29,8 +34,13 @@ const ActivityCollectionCard = ({
       href={getActivityCollectionRoute(id)}
       className="flex flex-col rounded-xl border border-gray-300 p-4 hover:border-black dark:border-gray-500 dark:hover:border-white"
     >
-      <div className="flex gap-2 pb-4">
+      <div className="flex flex-wrap gap-2 pb-4">
         <h2 className="flex-1 text-xl">{name}</h2>
+        {userId !== ownerId && (
+          <div>
+            <SharedWithTag activityCollectionId={id} refetch={refetch} />
+          </div>
+        )}
         <div>
           <DeleteActivityCollectionButton
             activityCollectionId={id}
@@ -61,6 +71,7 @@ const ActivityCollectionCard = ({
 
 const ActivityCollectionGrid = ({
   activityCollections,
+  userId,
   refetch,
 }: {
   activityCollections: {
@@ -68,7 +79,9 @@ const ActivityCollectionGrid = ({
     name: string;
     description: string;
     createdAt: Date;
+    ownerId: string;
   }[];
+  userId: string;
   refetch: () => Promise<void>;
 }) => {
   return (
@@ -77,6 +90,7 @@ const ActivityCollectionGrid = ({
         <ActivityCollectionCard
           key={activityCollection.id}
           activityCollection={activityCollection}
+          userId={userId}
           refetch={refetch}
         />
       ))}
@@ -85,18 +99,26 @@ const ActivityCollectionGrid = ({
 };
 
 export default function HomePage() {
+  const { user, isLoaded } = useUser();
+
   const {
     data: activityCollectionsData,
     isLoading: isLoadingActivityCollections,
     refetch: refetchActivityCollections,
   } = api.activityCollections.getAll.useQuery();
 
-  if (isLoadingActivityCollections) return <LoadingPage />;
+  if (isLoadingActivityCollections || !isLoaded) return <LoadingPage />;
 
   if (activityCollectionsData === undefined)
     return (
       <ErrorPage message="We couldn't find your activity collections, please try again later" />
     );
+
+  if (user === null) {
+    return (
+      <ErrorPage message="We couldn't load your user data, please try again later" />
+    );
+  }
 
   const { activityCollections } = activityCollectionsData;
 
@@ -113,6 +135,7 @@ export default function HomePage() {
       {activityCollections.length > 0 ? (
         <ActivityCollectionGrid
           activityCollections={activityCollections}
+          userId={user.id}
           refetch={async () => {
             await refetchActivityCollections();
           }}
