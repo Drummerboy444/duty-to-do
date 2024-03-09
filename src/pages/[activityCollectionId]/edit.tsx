@@ -30,20 +30,27 @@ const ActivitiesEditorRow = ({
   refetch: () => Promise<void>;
 }) => {
   return (
-    <div>
-      This is an activity row - {activity.name}
-      {" - "}
-      {activity.tags.map(({ name }) => name).join(", ")}
-      <EditActivityButton
-        activityId={activity.id}
-        defaultValues={{
-          ...activity,
-          tagIds: activity.tags.map(({ id }) => id),
-        }}
-        allTags={allTags}
-        refetch={refetch}
-      />
-      <DeleteActivityButton activityId={activity.id} refetch={refetch} />
+    <div className="flex flex-col gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
+      <div className="flex items-start gap-2">
+        <p>{activity.name}</p>
+        <div className="grow" />
+        <EditActivityButton
+          activityId={activity.id}
+          defaultValues={{
+            ...activity,
+            tagIds: activity.tags.map(({ id }) => id),
+          }}
+          allTags={allTags}
+          refetch={refetch}
+        />
+        <DeleteActivityButton activityId={activity.id} refetch={refetch} />
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {activity.tags.map((tag) => (
+          <TagChip key={tag.id} tag={tag} />
+        ))}
+      </div>
     </div>
   );
 };
