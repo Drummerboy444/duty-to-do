@@ -1,5 +1,5 @@
-import { getTagColour } from "~/utils/string-to-colour";
 import { Checkbox } from "../Checkbox";
+import { TagChip } from "../TagChip";
 import { TextInput } from "../TextInput";
 
 export type ActivityFormState = {
@@ -42,14 +42,7 @@ export const ActivityForm = ({
                 });
               }}
             />
-            <p
-              style={{
-                backgroundColor: getTagColour(tag.id),
-              }}
-              className="rounded-full px-4 text-black"
-            >
-              {tag.name}
-            </p>
+            <TagChip tag={tag} />
           </div>
         ))}
       </div>

@@ -6,13 +6,13 @@ import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
 import { Separator } from "~/components/Separator";
+import { TagChip } from "~/components/TagChip";
 import { CreateTagButton } from "~/components/TagForm/CreateTagButton";
 import { DeleteTagButton } from "~/components/TagForm/DeleteTagButton";
 import { EditTagButton } from "~/components/TagForm/EditTagButton";
 import { useSafeEditActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
-import { getTagColour } from "~/utils/string-to-colour";
 
 const ActivitiesEditorRow = ({
   activity,
@@ -79,14 +79,7 @@ const TagsEditorRow = ({
 }) => {
   return (
     <div className="flex items-start gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
-      <p
-        style={{
-          backgroundColor: getTagColour(tag.id),
-        }}
-        className="rounded-full px-4 text-black"
-      >
-        {tag.name}
-      </p>
+      <TagChip tag={tag} />
       <div className="grow" />
       <DeleteTagButton tagId={tag.id} refetch={refetch} />
       <EditTagButton tagId={tag.id} defaultValues={tag} refetch={refetch} />
