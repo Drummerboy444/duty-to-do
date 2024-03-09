@@ -1,6 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactNode } from "react";
+import { CreateActivityButton } from "~/components/ActivityForm/CreateActivityButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
@@ -12,6 +13,59 @@ import { useSafeEditActivityCollectionQueryParams } from "~/hooks/use-safe-query
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
 import { getTagColour } from "~/utils/string-to-colour";
+
+const ActivitiesEditorRow = ({
+  activity,
+  refetch,
+}: {
+  activity: {
+    id: string;
+    name: string;
+    tags: { id: string; name: string }[];
+  };
+  refetch: () => Promise<void>;
+}) => {
+  return (
+    <div>
+      This is an activity row - {activity.name}
+      {" - "}
+      {activity.tags.map(({ name }) => name).join(", ")}
+    </div>
+  );
+};
+
+const ActivitiesEditor = ({
+  activities,
+  activityCollectionId,
+  refetch,
+}: {
+  activities: {
+    id: string;
+    name: string;
+    tags: { id: string; name: string }[];
+  }[];
+  activityCollectionId: string;
+  refetch: () => Promise<void>;
+}) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <CreateActivityButton
+          activityCollectionId={activityCollectionId}
+          refetch={refetch}
+        />
+      </div>
+
+      {activities.map((activity) => (
+        <ActivitiesEditorRow
+          key={activity.id}
+          activity={activity}
+          refetch={refetch}
+        />
+      ))}
+    </div>
+  );
+};
 
 const TagsEditorRow = ({
   tag,
@@ -149,7 +203,7 @@ export default function EditActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { id, name, description, tags },
+        activityCollection: { id, name, description, activities, tags },
       } = activityCollectionData;
 
       const refetch = async () => {
@@ -172,7 +226,11 @@ export default function EditActivityCollectionPage() {
                 id: "activities",
                 displayName: "Activities",
                 content: (
-                  <p>This is where you will be able to edit activities...</p>
+                  <ActivitiesEditor
+                    activities={activities}
+                    activityCollectionId={id}
+                    refetch={refetch}
+                  />
                 ),
               },
               {
