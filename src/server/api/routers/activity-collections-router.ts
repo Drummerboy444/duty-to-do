@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { ACCESS_DENIED, SUCCESS } from "../utils/generic-responses";
 import { isUniqueConstraintViolation } from "../utils/db-violations";
+import { appendPublicUsers } from "../utils/users";
 
 export const activityCollectionsRouter = createTRPCRouter({
   get: privateProcedure
@@ -13,7 +14,11 @@ export const activityCollectionsRouter = createTRPCRouter({
     .query(async ({ ctx: { db, userId }, input: { id } }) => {
       const activityCollection = await db.activityCollection.findUnique({
         where: { id },
-        include: { activities: { include: { tags: true } }, tags: true },
+        include: {
+          activities: { include: { tags: true } },
+          tags: true,
+          sharedWith: true,
+        },
       });
 
       if (activityCollection === null)
@@ -23,7 +28,16 @@ export const activityCollectionsRouter = createTRPCRouter({
 
       if (!canAccessActivityCollection) return ACCESS_DENIED;
 
-      return { ...SUCCESS, activityCollection };
+      return {
+        ...SUCCESS,
+        activityCollection: {
+          ...activityCollection,
+          sharedWith:
+            activityCollection.ownerId === userId
+              ? await appendPublicUsers(activityCollection.sharedWith)
+              : "ACCESS_DENIED",
+        },
+      };
     }),
 
   getAll: privateProcedure.query(async ({ ctx: { db, userId } }) => {
