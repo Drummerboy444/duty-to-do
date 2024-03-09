@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import * as Tabs from "@radix-ui/react-tabs";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactNode } from "react";
 import { CreateActivityButton } from "~/components/ActivityForm/CreateActivityButton";
@@ -137,8 +138,47 @@ const TagsEditor = ({
   );
 };
 
-const SharingTab = () => {
-  return <div>This is the sharing tab...</div>;
+const SharingTab = ({
+  activityCollectionId,
+  sharedWith,
+}: {
+  activityCollectionId: string;
+  sharedWith: {
+    id: string;
+    user:
+      | {
+          id: string;
+          username: string | null;
+          imageUrl: string;
+        }
+      | "UNKNOWN_USER";
+  }[];
+}) => {
+  return (
+    <div className="flex flex-col gap-4">
+      {sharedWith.map(({ id, user }) => (
+        <div
+          key={id}
+          className="flex items-center gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500"
+        >
+          {user === "UNKNOWN_USER" ? (
+            <p>Unknown user</p>
+          ) : (
+            <>
+              <Image
+                className="rounded-full"
+                src={user.imageUrl}
+                width={32}
+                height={32}
+                alt="User avatar"
+              />
+              <p>{user.username === null ? "Unknown user" : user.username}</p>
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const EditPageTabs = ({
@@ -169,7 +209,7 @@ const EditPageTabs = ({
           <Tabs.Trigger
             key={id}
             value={id}
-            className="border-b-2 border-b-transparent px-8 py-2 data-[state=active]:border-b-sky-500"
+            className="border-b-2 border-b-transparent px-2 py-2 data-[state=active]:border-b-sky-500 sm:px-4 lg:px-8"
           >
             {displayName}
           </Tabs.Trigger>
@@ -238,11 +278,11 @@ export default function EditActivityCollectionPage() {
       const {
         activityCollection: {
           id,
-          ownerId,
           name,
           description,
           activities,
           tags,
+          sharedWith,
         },
       } = activityCollectionData;
 
@@ -255,11 +295,16 @@ export default function EditActivityCollectionPage() {
           <PageHeader header={name} subheader={description} />
           <EditPageTabs
             defaultTab={
-              (queryParams.optionalKeysLookup.tab !== undefined &&
-                queryParams.optionalKeysLookup.tab === "activities") ||
-              queryParams.optionalKeysLookup.tab === "tags"
-                ? queryParams.optionalKeysLookup.tab
-                : "activities"
+              queryParams.optionalKeysLookup.tab === undefined
+                ? "activities"
+                : ["activities", "tags"].includes(
+                      queryParams.optionalKeysLookup.tab,
+                    )
+                  ? queryParams.optionalKeysLookup.tab
+                  : queryParams.optionalKeysLookup.tab === "sharing" &&
+                      sharedWith !== "ACCESS_DENIED"
+                    ? "sharing"
+                    : "activities"
             }
             tabs={[
               {
@@ -285,12 +330,17 @@ export default function EditActivityCollectionPage() {
                   />
                 ),
               },
-              ...(user.id === ownerId
+              ...(sharedWith !== "ACCESS_DENIED"
                 ? [
                     {
                       id: "sharing",
                       displayName: "Sharing",
-                      content: <SharingTab />,
+                      content: (
+                        <SharingTab
+                          activityCollectionId={id}
+                          sharedWith={sharedWith}
+                        />
+                      ),
                     },
                   ]
                 : []),
