@@ -2,6 +2,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactNode } from "react";
 import { CreateActivityButton } from "~/components/ActivityForm/CreateActivityButton";
+import { EditActivityButton } from "~/components/ActivityForm/EditActivityButton";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
@@ -16,6 +17,7 @@ import { api } from "~/utils/api";
 
 const ActivitiesEditorRow = ({
   activity,
+  allTags,
   refetch,
 }: {
   activity: {
@@ -23,6 +25,7 @@ const ActivitiesEditorRow = ({
     name: string;
     tags: { id: string; name: string }[];
   };
+  allTags: { id: string; name: string }[];
   refetch: () => Promise<void>;
 }) => {
   return (
@@ -30,6 +33,15 @@ const ActivitiesEditorRow = ({
       This is an activity row - {activity.name}
       {" - "}
       {activity.tags.map(({ name }) => name).join(", ")}
+      <EditActivityButton
+        activityId={activity.id}
+        defaultValues={{
+          ...activity,
+          tagIds: activity.tags.map(({ id }) => id),
+        }}
+        allTags={allTags}
+        refetch={refetch}
+      />
     </div>
   );
 };
@@ -63,6 +75,7 @@ const ActivitiesEditor = ({
         <ActivitiesEditorRow
           key={activity.id}
           activity={activity}
+          allTags={allTags}
           refetch={refetch}
         />
       ))}
