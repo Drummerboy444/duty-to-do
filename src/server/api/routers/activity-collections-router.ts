@@ -231,4 +231,29 @@ export const activityCollectionsRouter = createTRPCRouter({
         shareWith: await db.sharedWith.delete({ where: { id: sharedWithId } }),
       };
     }),
+
+  removeMe: privateProcedure
+    .input(z.object({ activityCollectionId: z.string() }))
+    .mutation(
+      async ({ ctx: { db, userId }, input: { activityCollectionId } }) => {
+        const maybeSharedWith = await db.sharedWith.findUnique({
+          where: {
+            userId_activityCollectionId: {
+              userId,
+              activityCollectionId,
+            },
+          },
+        });
+
+        if (maybeSharedWith === null)
+          return { type: "NOT_SHARED_WITH" as const };
+
+        return {
+          ...SUCCESS,
+          sharedWith: await db.sharedWith.delete({
+            where: { id: maybeSharedWith.id },
+          }),
+        };
+      },
+    ),
 });
