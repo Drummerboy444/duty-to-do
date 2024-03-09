@@ -1,3 +1,4 @@
+import { Checkbox } from "../Checkbox";
 import { TextInput } from "../TextInput";
 
 export type ActivityFormState = {
@@ -6,7 +7,7 @@ export type ActivityFormState = {
 };
 
 export const ActivityForm = ({
-  formState: { name, tagIds },
+  formState,
   onFormStateChange,
   allTags,
 }: {
@@ -17,14 +18,32 @@ export const ActivityForm = ({
   return (
     <>
       <TextInput
-        value={name}
+        value={formState.name}
         setValue={(value) => {
           onFormStateChange({ name: value });
         }}
         label="Name"
       />
 
-      <div>To do: Tag editor...</div>
+      <div className="flex flex-col gap-2">
+        {allTags.map((tag) => (
+          <Checkbox
+            key={tag.id}
+            checked={formState.tagIds.includes(tag.id)}
+            setChecked={(checked) => {
+              onFormStateChange({
+                tagIds: allTags
+                  .filter((otherTag) => {
+                    if (otherTag.id === tag.id) return checked;
+                    return formState.tagIds.includes(otherTag.id);
+                  })
+                  .map(({ id }) => id),
+              });
+            }}
+            label={tag.name}
+          />
+        ))}
+      </div>
     </>
   );
 };
