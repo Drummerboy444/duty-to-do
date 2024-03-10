@@ -44,7 +44,24 @@ export const activityCollectionsRouter = createTRPCRouter({
         ...SUCCESS,
         activityCollection: {
           ...activityCollection,
-          sharedWith: await appendPublicUsers(activityCollection.sharedWith),
+          sharedWith: (
+            await appendPublicUsers(activityCollection.sharedWith)
+          ).sort((sharedWith1, sharedWith2) => {
+            const name1 =
+              sharedWith1.user !== "UNKNOWN_USER" &&
+              sharedWith1.user.username !== null
+                ? sharedWith1.user.username.toUpperCase()
+                : null;
+            const name2 =
+              sharedWith2.user !== "UNKNOWN_USER" &&
+              sharedWith2.user.username !== null
+                ? sharedWith2.user.username.toUpperCase()
+                : null;
+
+            if (name1 === null || name2 === null) return 0;
+
+            return name1 < name2 ? -1 : name1 > name2 ? 1 : 0;
+          }),
           owner: await safeGetPublicUser(activityCollection.ownerId),
         },
       };
