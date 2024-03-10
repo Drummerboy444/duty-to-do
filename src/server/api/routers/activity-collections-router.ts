@@ -5,6 +5,7 @@ import { isUniqueConstraintViolation } from "../utils/db-violations";
 import {
   appendPublicUsers,
   safeGetPublicUser,
+  safeGetPublicUsers,
   safeGetUserByUsername,
 } from "../utils/users";
 
@@ -47,12 +48,24 @@ export const activityCollectionsRouter = createTRPCRouter({
     }),
 
   getAll: privateProcedure.query(async ({ ctx: { db, userId } }) => {
+    const activityCollections = await db.activityCollection.findMany({
+      where: {
+        OR: [{ ownerId: userId }, { sharedWith: { some: { userId } } }],
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    const publicUsers = await safeGetPublicUsers(
+      activityCollections.map(({ ownerId }) => ownerId),
+    );
+
     return {
-      activityCollections: await db.activityCollection.findMany({
-        where: {
-          OR: [{ ownerId: userId }, { sharedWith: { some: { userId } } }],
-        },
-        orderBy: { createdAt: "desc" },
+      activityCollections: activityCollections.map((activityCollection) => {
+        const owner = publicUsers[activityCollection.ownerId];
+        return {
+          ...activityCollection,
+          owner: owner === undefined ? "UNKNOWN_USER" : owner,
+        };
       }),
     };
   }),

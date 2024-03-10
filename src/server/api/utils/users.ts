@@ -25,6 +25,19 @@ export const safeGetPublicUser = async (userId: string) => {
   return user === "UNKNOWN_USER" ? user : extractPublicUserData(user);
 };
 
+export const safeGetPublicUsers = async (userIds: string[]) => {
+  const users = await clerkClient.users.getUserList({
+    userId: userIds,
+  });
+
+  return userIds.reduce<
+    Record<string, ReturnType<typeof extractPublicUserData>>
+  >((lookup, userId) => {
+    const user = users.find(({ id }) => id === userId);
+    return user === undefined ? lookup : { ...lookup, [userId]: user };
+  }, {});
+};
+
 export const safeGetUserByUsername = async (username: string) => {
   const potentialUsers = await clerkClient.users.getUserList({
     username: [username],
