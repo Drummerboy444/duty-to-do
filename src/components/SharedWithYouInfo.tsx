@@ -9,7 +9,7 @@ export const SharedWithYouInfo = ({
 }) => {
   return (
     <div className="flex items-center gap-2">
-      <p className="italic text-gray-500">Shared with you by {username}</p>
+      <p className="text-gray-500">Shared with you by {username}</p>
       <Avatar imageUrl={imageUrl} />
     </div>
   );
