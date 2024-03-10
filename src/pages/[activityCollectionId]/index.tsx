@@ -1,9 +1,11 @@
+import { useUser } from "@clerk/nextjs";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useState } from "react";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
+import { SharedWithYouInfo } from "~/components/SharedWithYouInfo";
 import { SelectableTagChip, TagChip } from "~/components/TagChip";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
@@ -66,6 +68,7 @@ const TagSelector = ({
 export default function ActivityCollectionPage() {
   const queryParams = useSafeActivityCollectionQueryParams();
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const { user, isLoaded: userIsLoaded } = useUser();
 
   const {
     data: activityCollectionData,
@@ -80,12 +83,18 @@ export default function ActivityCollectionPage() {
     },
   );
 
-  if (isLoadingActivityCollection) return <LoadingPage />;
+  if (isLoadingActivityCollection || !userIsLoaded) return <LoadingPage />;
 
   if (activityCollectionData === undefined)
     return (
       <ErrorPage message="We couldn't find this activity collection, please try again later" />
     );
+
+  if (user === null) {
+    return (
+      <ErrorPage message="We couldn't load your user data, please try again later" />
+    );
+  }
 
   switch (activityCollectionData.type) {
     case "NO_ACTIVITY_COLLECTION_FOUND": {
@@ -100,7 +109,7 @@ export default function ActivityCollectionPage() {
 
     case "SUCCESS": {
       const {
-        activityCollection: { id, name, description, activities },
+        activityCollection: { id, name, description, activities, owner },
       } = activityCollectionData;
 
       const filteredActivities = activities.filter((activity) =>
@@ -117,6 +126,15 @@ export default function ActivityCollectionPage() {
               <Pencil1Icon />
             </Link>
           </div>
+
+          {owner !== "UNKNOWN_USER" &&
+            user.id !== owner.id &&
+            owner.username !== null && (
+              <SharedWithYouInfo
+                username={owner.username}
+                imageUrl={owner.imageUrl}
+              />
+            )}
 
           <TagSelector
             selectedTagIds={selectedTagIds}

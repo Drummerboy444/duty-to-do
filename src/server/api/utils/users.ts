@@ -22,7 +22,9 @@ export const safeGetUser = async (userId: string) => {
 
 export const safeGetPublicUser = async (userId: string) => {
   const user = await safeGetUser(userId);
-  return user === "UNKNOWN_USER" ? user : extractPublicUserData(user);
+  return user === "UNKNOWN_USER"
+    ? ("UNKNOWN_USER" as const)
+    : extractPublicUserData(user);
 };
 
 export const safeGetPublicUsers = async (userIds: string[]) => {

@@ -9,6 +9,7 @@ import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
 import { Separator } from "~/components/Separator";
+import { SharedWithYouInfo } from "~/components/SharedWithYouInfo";
 import { useSafeEditActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
 import { absurd } from "~/utils/absurd";
 import { api } from "~/utils/api";
@@ -116,6 +117,7 @@ export default function EditActivityCollectionPage() {
           tags,
           sharedWith,
           ownerId,
+          owner,
         },
       } = activityCollectionData;
 
@@ -126,6 +128,16 @@ export default function EditActivityCollectionPage() {
       return (
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
           <PageHeader header={name} subheader={description} />
+
+          {owner !== "UNKNOWN_USER" &&
+            user.id !== owner.id &&
+            owner.username !== null && (
+              <SharedWithYouInfo
+                username={owner.username}
+                imageUrl={owner.imageUrl}
+              />
+            )}
+
           <EditPageTabs
             defaultTab={
               queryParams.optionalKeysLookup.tab === undefined
