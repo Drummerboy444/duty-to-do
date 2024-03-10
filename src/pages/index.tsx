@@ -8,14 +8,14 @@ import { EditActivityCollectionButton } from "~/components/ActivityCollectionFor
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
-import { SharedWithTag } from "~/components/SharedWithTag";
+import { SharedWithYouInfo } from "~/components/SharedWithYouInfo";
 import { api } from "~/utils/api";
 import { getActivityCollectionRoute } from "~/utils/routing";
 
 dayjs.extend(relativeTime);
 
 const ActivityCollectionCard = ({
-  activityCollection: { id, name, description, createdAt, ownerId },
+  activityCollection: { id, name, description, createdAt, owner },
   userId,
   refetch,
 }: {
@@ -24,7 +24,9 @@ const ActivityCollectionCard = ({
     name: string;
     description: string;
     createdAt: Date;
-    ownerId: string;
+    owner:
+      | { id: string; username: string | null; imageUrl: string }
+      | "UNKNOWN_USER";
   };
   userId: string;
   refetch: () => Promise<void>;
@@ -36,11 +38,6 @@ const ActivityCollectionCard = ({
     >
       <div className="flex flex-wrap gap-2 pb-4">
         <h2 className="flex-1 text-xl">{name}</h2>
-        {userId !== ownerId && (
-          <div>
-            <SharedWithTag activityCollectionId={id} refetch={refetch} />
-          </div>
-        )}
         <div>
           <DeleteActivityCollectionButton
             activityCollectionId={id}
@@ -65,6 +62,17 @@ const ActivityCollectionCard = ({
           Created {dayjs(createdAt).fromNow()}
         </div>
       </div>
+
+      {owner !== "UNKNOWN_USER" &&
+        userId !== owner.id &&
+        owner.username !== null && (
+          <div className="flex justify-end pt-2">
+            <SharedWithYouInfo
+              username={owner.username}
+              imageUrl={owner.imageUrl}
+            />
+          </div>
+        )}
     </Link>
   );
 };
@@ -79,7 +87,9 @@ const ActivityCollectionGrid = ({
     name: string;
     description: string;
     createdAt: Date;
-    ownerId: string;
+    owner:
+      | { id: string; username: string | null; imageUrl: string }
+      | "UNKNOWN_USER";
   }[];
   userId: string;
   refetch: () => Promise<void>;

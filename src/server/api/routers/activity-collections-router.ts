@@ -64,7 +64,7 @@ export const activityCollectionsRouter = createTRPCRouter({
         const owner = publicUsers[activityCollection.ownerId];
         return {
           ...activityCollection,
-          owner: owner === undefined ? "UNKNOWN_USER" : owner,
+          owner: owner === undefined ? ("UNKNOWN_USER" as const) : owner,
         };
       }),
     };

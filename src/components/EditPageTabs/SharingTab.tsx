@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { ShareActivityCollectionButton } from "./ShareActivityCollectionButton";
 import { UnshareActivityCollectionButton } from "./UnshareActivityCollectionButton";
+import { Avatar } from "../Avatar";
 
 const SharingRow = ({
   sharedWith: { id, user },
@@ -26,13 +26,7 @@ const SharingRow = ({
         <p>Unknown user</p>
       ) : (
         <>
-          <Image
-            className="rounded-full"
-            src={user.imageUrl}
-            width={27}
-            height={27}
-            alt="User avatar"
-          />
+          <Avatar imageUrl={user.imageUrl} />
           <p>{user.username === null ? "Unknown user" : user.username}</p>
           {canEdit && (
             <>
