@@ -9,14 +9,16 @@ const getTagColour = (tagId: string) =>
 
 export const TagChip = ({
   tag: { id, name },
+  small = false,
 }: {
   tag: { id: string; name: string };
+  small?: boolean;
 }) => (
   <p
     style={{
       backgroundColor: getTagColour(id),
     }}
-    className="rounded-full px-4 text-black"
+    className={`rounded-full px-4 text-black ${small ? "text-sm" : ""}`}
   >
     {name}
   </p>

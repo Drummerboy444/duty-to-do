@@ -36,7 +36,7 @@ const ActivitiesEditorRow = ({
       {activity.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {activity.tags.map((tag) => (
-            <TagChip key={tag.id} tag={tag} />
+            <TagChip key={tag.id} tag={tag} small />
           ))}
         </div>
       )}
