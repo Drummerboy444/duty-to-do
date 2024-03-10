@@ -20,7 +20,7 @@ const ActivityRow = ({
   tags: { id: string; name: string }[];
 }) => (
   <div className="flex flex-col gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
-    <p>{name}</p>
+    <p className="text-lg">{name}</p>
     {tags.length > 0 && (
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (

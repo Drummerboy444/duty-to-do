@@ -19,7 +19,7 @@ const ActivitiesEditorRow = ({
   return (
     <div className="flex flex-col gap-2 rounded-lg border border-gray-300 p-4 dark:border-gray-500">
       <div className="flex items-start gap-2">
-        <p>{activity.name}</p>
+        <p className="text-lg">{activity.name}</p>
         <div className="grow" />
         <DeleteActivityButton activityId={activity.id} refetch={refetch} />
         <EditActivityButton
