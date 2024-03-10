@@ -20,8 +20,11 @@ export const activityCollectionsRouter = createTRPCRouter({
       const activityCollection = await db.activityCollection.findUnique({
         where: { id },
         include: {
-          activities: { include: { tags: true } },
-          tags: true,
+          activities: {
+            include: { tags: { orderBy: { name: "asc" } } },
+            orderBy: { name: "asc" },
+          },
+          tags: { orderBy: { name: "asc" } },
           sharedWith: true,
         },
       });
@@ -52,7 +55,7 @@ export const activityCollectionsRouter = createTRPCRouter({
       where: {
         OR: [{ ownerId: userId }, { sharedWith: { some: { userId } } }],
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { name: "asc" },
     });
 
     const publicUsers = await safeGetPublicUsers(
