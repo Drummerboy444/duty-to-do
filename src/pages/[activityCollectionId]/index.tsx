@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
+import { RandomActivityButton } from "~/components/RandomActivityButton";
 import { SharedWithYouInfo } from "~/components/SharedWithYouInfo";
 import { SelectableTagChip, TagChip } from "~/components/TagChip";
 import { useSafeActivityCollectionQueryParams } from "~/hooks/use-safe-query-params";
@@ -122,9 +123,12 @@ export default function ActivityCollectionPage() {
         <main className="flex flex-col gap-4 px-8 py-12 sm:px-16 lg:px-24">
           <div className="flex justify-between gap-2">
             <PageHeader header={name} subheader={description} />
-            <Link className="pt-2" href={getActivityCollectionEditRoute(id)}>
-              <Pencil1Icon />
-            </Link>
+            <div className="flex gap-2 pt-2">
+              <RandomActivityButton choices={filteredActivities} />
+              <Link href={getActivityCollectionEditRoute(id)}>
+                <Pencil1Icon />
+              </Link>
+            </div>
           </div>
 
           {owner !== "UNKNOWN_USER" &&
