@@ -67,22 +67,22 @@ const ActivityCollectionCard = ({
 
       <div className="grow" />
 
-      <div className="flex justify-end">
-        <div className="text-sm text-gray-500">
-          Created {dayjs(createdAt).fromNow()}
-        </div>
-      </div>
-
       {owner !== "UNKNOWN_USER" &&
         userId !== owner.id &&
         owner.username !== null && (
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end pb-2">
             <SharedWithYouInfo
               username={owner.username}
               imageUrl={owner.imageUrl}
             />
           </div>
         )}
+
+      <div className="flex justify-end">
+        <div className="text-sm text-gray-500">
+          Created {dayjs(createdAt).fromNow()}
+        </div>
+      </div>
     </Link>
   );
 };
