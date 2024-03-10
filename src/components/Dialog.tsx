@@ -8,7 +8,7 @@ export const Dialog = ({
   content,
   footer,
 }: {
-  title: string;
+  title: string | ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   content: ReactNode;

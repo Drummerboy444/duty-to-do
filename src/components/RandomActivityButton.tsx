@@ -23,7 +23,13 @@ export const RandomActivityButton = ({
       />
 
       <Dialog
-        title="🎲 Random Choice 🎲"
+        title={
+          <div className="flex items-center gap-2">
+            <p className="animate-spin">🎲</p>
+            <p>Random Choice</p>
+            <p className="animate-spin">🎲</p>
+          </div>
+        }
         open={open}
         onOpenChange={(open) => {
           setOpen(open);
