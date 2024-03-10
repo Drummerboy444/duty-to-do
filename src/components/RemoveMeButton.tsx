@@ -1,15 +1,15 @@
-import { Share1Icon } from "@radix-ui/react-icons";
-import { FlatIconButton } from "./IconButton";
+import { TrashIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
-import { api } from "~/utils/api";
-import { absurd } from "~/utils/absurd";
 import toast from "react-hot-toast";
+import { absurd } from "~/utils/absurd";
+import { api } from "~/utils/api";
+import { Button } from "./Button";
 import { Dialog } from "./Dialog";
 import { ErrorCallout } from "./ErrorCallout";
+import { IconButton } from "./IconButton";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { Button } from "./Button";
 
-export const SharedWithTag = ({
+export const RemoveMeButton = ({
   activityCollectionId,
   refetch,
 }: {
@@ -50,8 +50,9 @@ export const SharedWithTag = ({
 
   return (
     <>
-      <FlatIconButton
-        icon={<Share1Icon />}
+      <IconButton
+        icon={<TrashIcon />}
+        warn
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();

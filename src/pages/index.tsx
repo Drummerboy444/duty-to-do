@@ -8,6 +8,7 @@ import { EditActivityCollectionButton } from "~/components/ActivityCollectionFor
 import { ErrorPage } from "~/components/ErrorPage";
 import { LoadingPage } from "~/components/LoadingPage";
 import { PageHeader } from "~/components/PageHeader";
+import { RemoveMeButton } from "~/components/RemoveMeButton";
 import { SharedWithYouInfo } from "~/components/SharedWithYouInfo";
 import { api } from "~/utils/api";
 import { getActivityCollectionRoute } from "~/utils/routing";
@@ -38,19 +39,28 @@ const ActivityCollectionCard = ({
     >
       <div className="flex flex-wrap gap-2 pb-4">
         <h2 className="flex-1 text-xl">{name}</h2>
-        <div>
-          <DeleteActivityCollectionButton
-            activityCollectionId={id}
-            refetch={refetch}
-          />
-        </div>
-        <div>
-          <EditActivityCollectionButton
-            activityCollectionId={id}
-            defaultValues={{ name, description }}
-            refetch={refetch}
-          />
-        </div>
+
+        {owner !== "UNKNOWN_USER" &&
+        userId !== owner.id &&
+        owner.username !== null ? (
+          <RemoveMeButton activityCollectionId={id} refetch={refetch} />
+        ) : (
+          <>
+            <div>
+              <DeleteActivityCollectionButton
+                activityCollectionId={id}
+                refetch={refetch}
+              />
+            </div>
+            <div>
+              <EditActivityCollectionButton
+                activityCollectionId={id}
+                defaultValues={{ name, description }}
+                refetch={refetch}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <p className="pb-2">{description}</p>
