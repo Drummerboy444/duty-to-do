@@ -4,6 +4,7 @@ import { UnshareActivityCollectionButton } from "./UnshareActivityCollectionButt
 
 const SharingRow = ({
   sharedWith: { id, user },
+  canEdit,
   refetch,
 }: {
   sharedWith: {
@@ -16,6 +17,7 @@ const SharingRow = ({
         }
       | "UNKNOWN_USER";
   };
+  canEdit: boolean;
   refetch: () => Promise<void>;
 }) => {
   return (
@@ -32,11 +34,15 @@ const SharingRow = ({
             alt="User avatar"
           />
           <p>{user.username === null ? "Unknown user" : user.username}</p>
-          <div className="grow" />
-          <UnshareActivityCollectionButton
-            sharedWithId={id}
-            refetch={refetch}
-          />
+          {canEdit && (
+            <>
+              <div className="grow" />
+              <UnshareActivityCollectionButton
+                sharedWithId={id}
+                refetch={refetch}
+              />
+            </>
+          )}
         </>
       )}
     </div>
@@ -46,6 +52,7 @@ const SharingRow = ({
 export const SharingTab = ({
   activityCollectionId,
   sharedWith,
+  canEdit,
   refetch,
 }: {
   activityCollectionId: string;
@@ -59,19 +66,31 @@ export const SharingTab = ({
         }
       | "UNKNOWN_USER";
   }[];
+  canEdit: boolean;
   refetch: () => Promise<void>;
 }) => {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <ShareActivityCollectionButton
-          activityCollectionId={activityCollectionId}
-          refetch={refetch}
-        />
-      </div>
+      {canEdit ? (
+        <div>
+          <ShareActivityCollectionButton
+            activityCollectionId={activityCollectionId}
+            refetch={refetch}
+          />
+        </div>
+      ) : (
+        <p className="italic text-gray-500">
+          Only the owner of this activity collection can add and remove users
+        </p>
+      )}
 
       {sharedWith.map(({ id, user }) => (
-        <SharingRow key={id} sharedWith={{ id, user }} refetch={refetch} />
+        <SharingRow
+          key={id}
+          sharedWith={{ id, user }}
+          canEdit={canEdit}
+          refetch={refetch}
+        />
       ))}
     </div>
   );

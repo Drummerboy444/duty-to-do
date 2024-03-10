@@ -115,6 +115,7 @@ export default function EditActivityCollectionPage() {
           activities,
           tags,
           sharedWith,
+          ownerId,
         },
       } = activityCollectionData;
 
@@ -129,14 +130,11 @@ export default function EditActivityCollectionPage() {
             defaultTab={
               queryParams.optionalKeysLookup.tab === undefined
                 ? "activities"
-                : ["activities", "tags"].includes(
+                : ["activities", "tags", "sharing"].includes(
                       queryParams.optionalKeysLookup.tab,
                     )
                   ? queryParams.optionalKeysLookup.tab
-                  : queryParams.optionalKeysLookup.tab === "sharing" &&
-                      sharedWith !== "ACCESS_DENIED"
-                    ? "sharing"
-                    : "activities"
+                  : "activities"
             }
             tabs={[
               {
@@ -162,21 +160,18 @@ export default function EditActivityCollectionPage() {
                   />
                 ),
               },
-              ...(sharedWith !== "ACCESS_DENIED"
-                ? [
-                    {
-                      id: "sharing",
-                      displayName: "Sharing",
-                      content: (
-                        <SharingTab
-                          activityCollectionId={id}
-                          sharedWith={sharedWith}
-                          refetch={refetch}
-                        />
-                      ),
-                    },
-                  ]
-                : []),
+              {
+                id: "sharing",
+                displayName: "Sharing",
+                content: (
+                  <SharingTab
+                    activityCollectionId={id}
+                    sharedWith={sharedWith}
+                    refetch={refetch}
+                    canEdit={ownerId === user.id}
+                  />
+                ),
+              },
             ]}
           />
         </main>

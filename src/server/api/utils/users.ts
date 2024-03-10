@@ -20,6 +20,11 @@ export const safeGetUser = async (userId: string) => {
   }
 };
 
+export const safeGetPublicUser = async (userId: string) => {
+  const user = await safeGetUser(userId);
+  return user === "UNKNOWN_USER" ? user : extractPublicUserData(user);
+};
+
 export const safeGetUserByUsername = async (username: string) => {
   const potentialUsers = await clerkClient.users.getUserList({
     username: [username],
@@ -30,6 +35,11 @@ export const safeGetUserByUsername = async (username: string) => {
   );
 
   return matchingUser === undefined ? "NO_USER_FOUND" : matchingUser;
+};
+
+export const safeGetPublicUserByUsername = async (username: string) => {
+  const user = await safeGetUserByUsername(username);
+  return user === "NO_USER_FOUND" ? user : extractPublicUserData(user);
 };
 
 const appendUser =

@@ -2,7 +2,11 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { ACCESS_DENIED, SUCCESS } from "../utils/generic-responses";
 import { isUniqueConstraintViolation } from "../utils/db-violations";
-import { appendPublicUsers, safeGetUserByUsername } from "../utils/users";
+import {
+  appendPublicUsers,
+  safeGetPublicUser,
+  safeGetUserByUsername,
+} from "../utils/users";
 
 export const activityCollectionsRouter = createTRPCRouter({
   get: privateProcedure
@@ -36,10 +40,8 @@ export const activityCollectionsRouter = createTRPCRouter({
         ...SUCCESS,
         activityCollection: {
           ...activityCollection,
-          sharedWith:
-            activityCollection.ownerId === userId
-              ? await appendPublicUsers(activityCollection.sharedWith)
-              : ACCESS_DENIED.type,
+          sharedWith: await appendPublicUsers(activityCollection.sharedWith),
+          owner: await safeGetPublicUser(activityCollection.ownerId),
         },
       };
     }),
