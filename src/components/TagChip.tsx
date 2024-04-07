@@ -37,7 +37,7 @@ export const SelectableTagChip = ({
     style={{
       ...(selected ? { backgroundColor: getTagColour(id) } : {}),
     }}
-    className={`cursor-pointer select-none rounded-full border border-transparent px-4 ${selected ? "text-black" : "border-gray-300 dark:border-gray-700"}`}
+    className={`cursor-pointer select-none rounded-full border px-4 ${selected ? "border-transparent text-black" : "border-gray-300 dark:border-gray-700"}`}
     onClick={() => {
       setSelected(!selected);
     }}
